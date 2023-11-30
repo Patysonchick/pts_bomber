@@ -1,66 +1,47 @@
 use crate::utils::{PhoneNumberTypes, format_number};
 use std::collections::HashMap;
+use reqwest::header::HeaderMap;
 
 #[derive(Clone)]
 pub struct Service {
     pub name: String,
     pub url: String,
+    pub headers: HeaderMap,
     pub post: HashMap<String, String>
 }
+
+/*
+Образец
+
+{
+    let mut service = Service {
+        name: todo!(),
+        url: todo!(),
+        headers: HeaderMap::new(),
+        post: HashMap::new()
+    };
+
+    service.headers.insert(
+        "",
+        r#""#.parse().unwrap());
+
+    service.post.insert(
+        "".to_string(),
+        phone_number.clone());
+
+    services_list.push(service);
+}
+*/
 
 pub fn get_services_list(phone_number: String) -> Vec<Service> {
     let mut services_list = Vec::new();
 
-    /*{
-        "last_name": "Kuchiki",
-        "first_name": "Byakuya",
-        "email": "marchenkoserofim@gmail.com",
-        "phone": "+7(***)*******"
-    }*/
-    /*{ // Gosuslugi
-        let mut service = Service {
-            name: "Gosuslugi".to_string(),
-            url: "https://www.gosuslugi.ru/auth-provider/mobile/register".to_string(),
-            post: HashMap::new(),
-        };
-
-        service.post.insert(
-            "last_name".to_string(),
-            "Kuchiki".to_string()
-        );
-        service.post.insert(
-            "first_name".to_string(),
-            "Byakuya".to_string()
-        );
-        service.post.insert(
-            "email".to_string(),
-            "marchenkoserofim@gmail.com".to_string()
-        );
-        service.post.insert(
-            "phone".to_string(),
-            format_number(&PhoneNumberTypes::WithPlusBrackets(phone_number.to_string())));
-
-        services_list.push(service);
-    }*/
-
-    { // Telegram
-        let mut service = Service {
-            name: "Telegram".to_string(),
-            url: "https://my.telegram.org/auth/send_password".to_string(),
-            post: HashMap::new(),
-        };
-
-        service.post.insert(
-            "phone".to_string(),
-            format_number(&PhoneNumberTypes::WithPlus(phone_number.to_string())));
-        
-        services_list.push(service);
-    }
-
-    { // MyGames
+    // MyGames
+    { 
         let mut service = Service {
             name: "MyGames".to_string(),
             url: "https://account.my.games/signup_phone_init/".to_string(),
+            headers: HeaderMap::new(),
             post: HashMap::new()
         };
 
@@ -78,7 +59,7 @@ pub fn get_services_list(phone_number: String) -> Vec<Service> {
             "0".to_string());
         service.post.insert(
             "phone".to_string(), 
-            phone_number.to_string());
+            phone_number.clone());
         service.post.insert(
             "password".to_string(), 
             "marchenkoserofim@gmail.com".to_string());
@@ -88,6 +69,6 @@ pub fn get_services_list(phone_number: String) -> Vec<Service> {
         
         services_list.push(service);
     }
-
+    
     services_list
 }
