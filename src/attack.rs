@@ -1,8 +1,5 @@
-use crate::services::{construct_services_list, Service, Victim};
-use reqwest::header::HeaderMap;
+use crate::services::{construct_services_list, BodyType, Service, Victim};
 use reqwest::{Client, Method};
-use reqwest::{ClientBuilder, Response};
-use std::collections::HashMap;
 
 pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
     let services = construct_services_list(victim);
@@ -22,26 +19,19 @@ async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>>
 
     println!("Sending {}", service.name);
 
+    let mut res;
     match service.method {
-        Method::GET => {
-            let res = client.get(service.url).form(&service.fields).send().await?;
-
-            println!("{}", res.status());
-            println!("{}", res.text().await?);
-        }
-        Method::POST => {
-            let res = client
-                .post(service.url)
-                .form(&service.fields)
-                .send()
-                .await?;
-
-            println!("{}", res.status());
-            println!("{}", res.text().await?);
-        }
-        _ => {}
+        Method::GET => res = client.get(service.url),
+        Method::POST => res = client.post(service.url),
+        _ => panic!("Unsupported method"),
+    }
+    match service.body_type {
+        BodyType::JSON => res = res.json(&service.body),
+        BodyType::Form => res = res.form(&service.body),
     }
 
+    let res = res.send().await?;
+    println!("{}: {}", res.status(), res.text().await?);
     println!("{} sent", service.name);
 
     Ok(())
