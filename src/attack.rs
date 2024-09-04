@@ -13,6 +13,7 @@ pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
 
 async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::builder()
+        .user_agent("Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0")
         .default_headers(service.headers)
         .build()
         .expect("");
