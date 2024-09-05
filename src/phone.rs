@@ -9,6 +9,8 @@ pub enum Country {
     Ru,
 }
 
+#[allow(dead_code)]
+#[allow(clippy::enum_variant_names)]
 #[derive(Debug)]
 pub enum FormatterTypes {
     WithPlus,

