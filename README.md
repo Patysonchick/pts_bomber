@@ -1,4 +1,6 @@
 # pts_bomber
+**First** SMS/Call bomber on `Rust` language
+
 ## Working russian services
 ### Sms
 1. 4lapy
