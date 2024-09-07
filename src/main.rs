@@ -10,8 +10,6 @@ use std::io;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Test");
-    
     let phone = loop {
         println!("Enter russian number");
 
