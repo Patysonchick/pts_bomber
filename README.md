@@ -1,5 +1,7 @@
 # pts_bomber
-**First** SMS/call bomber on `Rust` language
+### **First** SMS/call bomber on `Rust` language.
+
+Telegram channel - [pts_bomber](https://t.me/pts_bomber)
 
 ## Working russian services
 ### Sms
@@ -11,3 +13,9 @@
 ### Calls
 1. DNS
 2. Sunlight
+
+## Roadmap
+* Optimize calling
+* Add mobile operators services
+* Add more services
+* Make more user-friendly(GUI powered by [Tauri](https://tauri.app/)(when 2.0 released))
