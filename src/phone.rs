@@ -13,6 +13,7 @@ pub enum Country {
 #[allow(clippy::enum_variant_names)]
 #[derive(Debug)]
 pub enum FormatterTypes {
+    Without7,
     WithPlus,
     WithPlusHyphen,         // +7 *** ***-**-**
     WithPlusBracketsHyphen, // +7 (***) ***-**-**
@@ -61,11 +62,14 @@ impl Phone {
     pub fn format(&mut self, formatter: FormatterTypes) {
         match self.country {
             Country::Ru => match formatter {
+                FormatterTypes::Without7 => {
+                    self.phone = self.phone[1..].to_string();
+                }
                 FormatterTypes::WithPlus => {
                     let mut formatted = String::new();
 
                     formatted.push('+');
-                    formatted.push_str(&self.phone[0..11]);
+                    formatted.push_str(self.phone.as_str());
 
                     self.phone = formatted;
                 }
