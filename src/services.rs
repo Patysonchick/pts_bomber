@@ -19,7 +19,7 @@ pub struct Service {
 pub enum ServiceType {
     Sms,
     Call,
-    InserviceMessage,
+    ServiceMessage,
 }
 
 #[allow(clippy::upper_case_acronyms)]
@@ -38,31 +38,31 @@ pub struct Victim {
     pub surname: String,
 }
 
-/*
-//
-{
-    let mut service = Service {
-        name: "".to_string(),
-        service_type: ServiceType::,
-        method: Method::,
-        url: "".to_string(),
-        headers: HeaderMap::new(),
-        body_type: BodyType::,
-        body: Default::default(),
-    };
+/// Example
+/// //
+/// {
+///     let mut service = Service {
+///         name: "".to_string(),
+///         service_type: ServiceType::,
+///         method: Method::,
+///         url: "".to_string(),
+///         headers: HeaderMap::new(),
+///         body_type: BodyType::,
+///         body: Default::default(),
+///     };
+///
+///     service.headers.insert("", r#""#.parse().unwrap());
+///
+///     let mut phone = victim.phone.clone();
+///     phone.format(WithPlus);
+///     service.body = json!({
+///         "phone": phone.phone
+///     });
+///
+///     services.push(service);
+/// }
 
-    service.headers.insert("", r#""#.parse().unwrap());
-
-    let mut phone = victim.phone.clone();
-    phone.format(WithPlus);
-    service.body = json!({
-        "phone": phone.phone
-    });
-
-    services.push(service);
-}
-*/
-
+/// List of SMS services and services messages
 pub fn construct_services_list(victim: Victim) -> Vec<Service> {
     let mut services = Vec::new();
 
@@ -72,7 +72,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
             {
                 let mut service = Service {
                     name: "Telegram".to_string(),
-                    service_type: ServiceType::InserviceMessage,
+                    service_type: ServiceType::ServiceMessage,
                     method: Method::POST,
                     url: "https://my.telegram.org/auth/send_password".to_string(),
                     headers: HeaderMap::new(),
@@ -275,6 +275,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
     services
 }
 
+/// List of call services
 pub fn construct_call_services_list(victim: Victim) -> Vec<Service> {
     let mut services = Vec::new();
 

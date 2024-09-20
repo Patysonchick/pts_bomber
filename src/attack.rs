@@ -51,7 +51,7 @@ async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>>
     match service.service_type {
         ServiceType::Sms => println!("Sending SMS {}", service.name),
         ServiceType::Call => println!("Calling {}", service.name),
-        ServiceType::InserviceMessage => println!("Sending service SMS {}", service.name),
+        ServiceType::ServiceMessage => println!("Sending service SMS {}", service.name),
     }
 
     let mut res;
