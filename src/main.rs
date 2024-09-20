@@ -18,12 +18,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         match Phone::new(input, Country::Ru) {
             Ok(t) => break t,
-            Err(e) => {
-                match e {
-                    FormatterErrors::IncorrectPatter => println!("Incorrect pattern\nNumber must be like 7 (9xx) xxx-xx-xx\n"),
-                    FormatterErrors::IncorrectLength => println!("Incorrect number length\n")
+            Err(e) => match e {
+                FormatterErrors::IncorrectPatter => {
+                    println!("Incorrect pattern\nNumber must be like 7 (9xx) xxx-xx-xx\n")
                 }
-            }
+                FormatterErrors::IncorrectLength => println!("Incorrect number length\n"),
+            },
         }
     };
 

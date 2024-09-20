@@ -8,37 +8,34 @@ const CALL_DELAY: u8 = 15;
 
 /// Вы бы знали как мне стыдно за такой колхозинг, но надеюсь это на время
 pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
-    let victim1 = victim.clone();
-    tokio::spawn(async move {
-        let services = construct_services_list(victim1);
+    let mut s = Vec::new();
+
+    let services = construct_services_list(victim.clone());
+    for service in services {
+        let t = tokio::spawn(async move {
+            send_single(service).await.expect("");
+        });
+        s.push(t);
+    }
+
+    let services = construct_call_services_list(victim);
+    let t = tokio::spawn(async move {
         for service in services {
-            if service.service_type != ServiceType::Call {
-                send_single(service).await.expect("");
+            for i in 0..CALL_DELAY {
+                println!("Waiting {} seconds before calling", CALL_DELAY - i);
+
+                tokio::time::sleep(Duration::from_secs(1)).await;
             }
+            println!();
+
+            send_single(service.clone()).await.expect("");
         }
-    })
-    .await?;
+    });
+    s.push(t);
 
-    let victim2 = victim.clone();
-    tokio::spawn(async move {
-        let services = construct_call_services_list(victim2);
-        for (i, service) in services.iter().enumerate() {
-            if service.service_type == ServiceType::Call {
-                if i != 0 {
-                    for i in 0..CALL_DELAY {
-                        println!("Waiting {} seconds before calling", CALL_DELAY - i);
-
-                        tokio::time::sleep(Duration::from_secs(1)).await;
-                    }
-
-                    println!();
-                }
-
-                send_single(service.clone()).await.expect("");
-            }
-        }
-    })
-    .await?;
+    for i in s {
+        i.await?;
+    }
 
     Ok(())
 }
