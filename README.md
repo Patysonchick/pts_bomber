@@ -14,7 +14,8 @@ Telegram channel - [pts_bomber](https://t.me/pts_bomber)
 2. Sunlight
 
 ## Roadmap
-* Optimize calling
+* ~~Make async attack~~
+* ~~Optimize calling~~
 * Add mobile operators services
 * Add more services
 * Make more user-friendly(GUI powered by [Tauri](https://tauri.app/)(when 2.0 released))
