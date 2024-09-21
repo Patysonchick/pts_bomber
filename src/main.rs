@@ -4,7 +4,7 @@ mod phone;
 mod services;
 
 use crate::attack::send;
-use crate::phone::{Country, Phone};
+use crate::phone::{Country, FormatterErrors, Phone};
 use crate::services::Victim;
 use std::io;
 
@@ -16,8 +16,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut input = String::new();
         io::stdin().read_line(&mut input)?;
 
-        if let Ok(t) = Phone::new(input, Country::Ru) {
-            break t;
+        match Phone::new(input, Country::Ru) {
+            Ok(t) => break t,
+            Err(e) => match e {
+                FormatterErrors::IncorrectPatter => {
+                    println!("Incorrect pattern\nNumber must be like 7 (9xx) xxx-xx-xx\n")
+                }
+                FormatterErrors::IncorrectLength => println!("Incorrect number length\n"),
+            },
         }
     };
 
