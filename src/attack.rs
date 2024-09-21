@@ -1,11 +1,40 @@
-use crate::services::{construct_services_list, BodyType, Service, ServiceType, Victim};
+use crate::services::{
+    construct_call_services_list, construct_services_list, BodyType, Service, ServiceType, Victim,
+};
 use reqwest::{Client, Method};
+use std::time::Duration;
 
+const CALL_DELAY: u8 = 15;
+
+/// Вы бы знали как мне стыдно за такой колхозинг, но надеюсь это на время
 pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
-    let services = construct_services_list(victim);
+    let mut s = Vec::new();
 
+    let services = construct_services_list(victim.clone());
     for service in services {
-        send_single(service).await?;
+        let t = tokio::spawn(async move {
+            send_single(service).await.expect("");
+        });
+        s.push(t);
+    }
+
+    let services = construct_call_services_list(victim);
+    let t = tokio::spawn(async move {
+        for service in services {
+            for i in 0..CALL_DELAY {
+                println!("Waiting {} seconds before calling", CALL_DELAY - i);
+
+                tokio::time::sleep(Duration::from_secs(1)).await;
+            }
+            println!();
+
+            send_single(service.clone()).await.expect("");
+        }
+    });
+    s.push(t);
+
+    for i in s {
+        i.await?;
     }
 
     Ok(())
@@ -22,7 +51,7 @@ async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>>
     match service.service_type {
         ServiceType::Sms => println!("Sending SMS {}", service.name),
         ServiceType::Call => println!("Calling {}", service.name),
-        ServiceType::ServiceSms => println!("Sending service SMS {}", service.name),
+        ServiceType::ServiceMessage => println!("Sending service SMS {}", service.name),
     }
 
     let mut res;
