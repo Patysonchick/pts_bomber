@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .panel {
+        @apply bg-neutral-800 rounded-xl text-center m-1 p-2;
+    }
+
+    .flex-element {
+        @apply flex flex-col;
+    }
+
+    .center-elements {
+        @apply text-center items-center justify-center;
+    }
+
+    .button {
+        @apply panel bg-black font-bold;
+    }
+}

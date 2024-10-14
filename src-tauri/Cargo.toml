@@ -1,0 +1,16 @@
+[package]
+name = "pts_bomber"
+version = "2.0.0"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0.0-rc.13", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0-rc.16", features = [] }
+tauri-plugin-shell = "2.0.0-rc.3"
+reqwest = { version = "0.12.7", features = ["json", "cookies"] }
+tokio = { version = "1.40.0", features = ["full"] }
+serde = { version = "1.0.210", features = ["derive"] }
+serde_json = "1.0.128"
+hardware-id = "0.3.0"
