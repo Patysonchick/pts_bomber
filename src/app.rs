@@ -1,6 +1,7 @@
-use sycamore::futures::spawn_local;
+use serde::{Deserialize, Serialize};
+use serde_wasm_bindgen::to_value;
+use sycamore::futures::spawn_local_scoped;
 use sycamore::prelude::*;
-use sycamore::rt::{spawn_local_scoped, Event};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -16,16 +17,17 @@ extern "C" {
 }
 
 #[component]
-pub fn App() -> View {
-    let input = create_signal(String::new());
+pub fn App<G: Html>(cx: Scope) -> View<G> {
+    let input = create_signal(cx, String::new());
 
-    let output = move |e: Event| {
-        spawn_local_scoped(async move {
-            println!("Test: {}", input);
+    let output = move |_| {
+        spawn_local_scoped(cx, async move {
+            let test = input.get();
+            println!("Test: {}", test);
         })
     };
 
-    view! {
+    view! { cx,
         div(class="flex-element flex-row w-full justify-between") {
             div(class="flex-element flex-row") {
                 span(class="panel flex-element font-bold") { "pts_bomber" }
@@ -39,10 +41,10 @@ pub fn App() -> View {
         div(class="panel flex-element flex-auto w-full center-elements justify-around") {
             div(class="w-full flex-element center-elements") {
                 div(class="bg-black font-bold p-2 m-1 rounded-2xl") { "Enter russian number" }
-                form(class="flex-element flex-row center-elements", on:submit=output) {
+                form(class="flex-element flex-row center-elements") {
                     span(class="panel bg-black"){ "🇷🇺" }
                     input(r#type="text", value="+7 (9xx) xxx xx-xx", class="bg-black text-center font-bold w-full p-1 border-2 border-green-600 rounded-xl", bind:value=input)
-                    button(r#type="submit", class="button material-symbols-rounded") { "send" }
+                    button(r#type="submit", class="button material-symbols-rounded", on:click=output) { "send" }
                 }
             }
             div(class="w-full flex-element center-elements") {

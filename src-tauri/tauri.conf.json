@@ -1,7 +1,7 @@
 {
   "productName": "pts_bomber",
-  "version": "0.1.0",
-  "identifier": "ru.pts_team.pts_bomber",
+  "version": "2.0.0",
+  "identifier": "ru.pts-team.pts-bomber",
   "build": {
     "beforeDevCommand": "trunk serve",
     "devUrl": "http://localhost:3229",
