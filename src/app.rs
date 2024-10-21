@@ -25,7 +25,7 @@ pub fn App<G: Html>(cx: Scope) -> View<G> {
         e.prevent_default();
         spawn_local_scoped(cx, async move {
             let test = input.get();
-            println!("Test: {}", test);
+            log(format!("Test: {}", test).as_str());
         })
     };
 

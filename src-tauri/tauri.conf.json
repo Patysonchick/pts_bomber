@@ -6,7 +6,7 @@
     "beforeDevCommand": "trunk serve",
     "devUrl": "http://localhost:3229",
     "beforeBuildCommand": "trunk build --release",
-    "frontendDist": "../src/dist"
+    "frontendDist": "../dist"
   },
   "app": {
     "withGlobalTauri": true,
