@@ -17,6 +17,11 @@ extern "C" {
     fn log(s: &str);
 }
 
+#[derive(Serialize, Deserialize)]
+struct EchoArgs<'a> {
+    msg: &'a str,
+}
+
 #[component]
 pub fn App<G: Html>(cx: Scope) -> View<G> {
     let input = create_signal(cx, String::new());
@@ -26,6 +31,7 @@ pub fn App<G: Html>(cx: Scope) -> View<G> {
         spawn_local_scoped(cx, async move {
             let test = input.get();
             log(format!("Test: {}", test).as_str());
+            invoke("echo", to_value(&EchoArgs { msg: &test }).unwrap()).await;
         })
     };
 
