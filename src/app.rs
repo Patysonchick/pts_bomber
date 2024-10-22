@@ -30,12 +30,12 @@ pub fn App<G: Html>(cx: Scope) -> View<G> {
     };
 
     view! { cx,
-        div(class="flex-element flex-row w-full justify-between") {
-            div(class="flex-element flex-row") {
-                span(class="panel flex-element font-bold") { "pts_bomber" }
+        div(data-tauri-drag-region=true, class="flex-element flex-row w-full justify-between") {
+            div(data-tauri-drag-region=true, class="flex-element flex-row") {
+                span(data-tauri-drag-region=true, class="panel flex-element font-bold") { "pts_bomber" }
                 span(class="panel flex-element font-light text") { em { "v2.0.0" } }
             }
-            span(class="panel w-full font-bold") { "Is idle" }
+            span(data-tauri-drag-region=true, class="panel w-full font-bold") { "Is idle" }
             div(class="panel material-symbols-rounded flex-element flex-row") {
                 button { "minimize" } button { "close" }
             }

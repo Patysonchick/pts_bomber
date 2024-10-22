@@ -13,6 +13,8 @@
     "windows": [
       {
         "title": "pts_bomber",
+        "decorations": false,
+        "resizable": true,
         "width": 800,
         "height": 600
       }
