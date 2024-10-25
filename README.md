@@ -1,21 +1,21 @@
 # pts_bomber
-### **First** SMS/call bomber on `Rust` language.
+### **Первый** SMS/звонки бомбер написанный на `Rust`.
 
-Telegram channel - [pts_bomber](https://t.me/pts_bomber)
+Telegram канал - [pts_bomber](https://t.me/pts_bomber)
 
-## Working russian services
-### Sms
-1. 4lapy
+## Рабочие российские сервисы
+### SMS
+1. 4 лапы
 2. Mvideo
-### Service sms
+### Сервисные SMS
 1. Telegram
-### Calls
+### Звонки
 1. DNS
 2. Sunlight
 
-## Roadmap
-* ~~Make async attack~~
-* ~~Optimize calling~~
-* Add mobile operators services
-* Add more services
-* Make more user-friendly(GUI powered by [Tauri](https://tauri.app/)(when 2.0 released))
+## Планы
+* Добавить больше мобильных операторов
+* Добавить больше сервисов
+* ~~Сделать асинхронную атаку~~
+* ~~Оптимизировать звонки~~
+* ~~Сделать более дружелюбным(GUI при помощи [Tauri](https://tauri.app/)(когда выйдет 2.0))~~
