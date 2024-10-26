@@ -15,11 +15,18 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
+
+    fn alert(s: &str);
 }
 
 #[derive(Serialize, Deserialize)]
 struct EchoArgs<'a> {
     msg: &'a str,
+}
+
+#[derive(Serialize, Deserialize)]
+struct FormatPhoneRuArgs<'a> {
+    numbers: &'a str,
 }
 
 #[component]
@@ -29,9 +36,15 @@ pub fn App<G: Html>(cx: Scope) -> View<G> {
     let output = move |e: Event| {
         e.prevent_default();
         spawn_local_scoped(cx, async move {
-            let test = input.get();
-            log(format!("Test: {}", test).as_str());
-            invoke("echo", to_value(&EchoArgs { msg: &test }).unwrap()).await;
+            let phone = invoke(
+                "format_phone_ru",
+                to_value(&FormatPhoneRuArgs {
+                    numbers: &input.get(),
+                })
+                .unwrap(),
+            )
+            .await;
+            log(&phone.as_string().unwrap());
         })
     };
 

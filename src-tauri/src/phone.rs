@@ -48,10 +48,10 @@ impl Phone {
     fn check_phone(&self) -> Result<(), FormatterErrors> {
         match self.country {
             Country::Ru => {
-                if &self.phone[0..2] != "79" && &self.phone[0..2] != "74" {
-                    Err(FormatterErrors::IncorrectPatter)
-                } else if self.phone.len() != 11 {
+                if self.phone.len() != 11 {
                     Err(FormatterErrors::IncorrectLength)
+                } else if &self.phone[0..2] != "79" && &self.phone[0..2] != "74" {
+                    Err(FormatterErrors::IncorrectPatter)
                 } else {
                     Ok(())
                 }
