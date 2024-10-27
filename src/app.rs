@@ -13,8 +13,14 @@ extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke)]
     async fn invoke_without_args(cmd: &str) -> JsValue;
 
+    // #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "window", "appWindow"])]
+    // async fn minimize();
+
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
+
+    #[wasm_bindgen(js_namespace = console)]
+    fn error(s: &str);
 
     fn alert(s: &str);
 }
@@ -48,6 +54,13 @@ pub fn App<G: Html>(cx: Scope) -> View<G> {
         })
     };
 
+    // let minimize = move |e: Event| {
+    //     e.prevent_default();
+    //     spawn_local_scoped(cx, async move {
+    //         minimize().await;
+    //     })
+    // };
+
     view! { cx,
         div(data-tauri-drag-region=true, class="flex-element flex-row w-full justify-between") {
             div(data-tauri-drag-region=true, class="flex-element flex-row") {
@@ -56,7 +69,7 @@ pub fn App<G: Html>(cx: Scope) -> View<G> {
             }
             span(data-tauri-drag-region=true, class="panel w-full font-bold") { "Is idle" }
             div(class="panel material-symbols-rounded flex-element flex-row") {
-                button { "minimize" } button { "close" }
+                button(id="titlebar-minimize") { "minimize" } button(id="titlebar-close") { "close" }
             }
         }
         div(class="panel flex-element flex-auto w-full center-elements justify-around") {
