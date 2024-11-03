@@ -1,8 +1,13 @@
 mod app;
 
-use app::App;
+use app::*;
+use leptos::*;
 
 fn main() {
     console_error_panic_hook::set_once();
-    sycamore::render(App);
+    mount_to_body(|| {
+        view! {
+            <App/>
+        }
+    })
 }

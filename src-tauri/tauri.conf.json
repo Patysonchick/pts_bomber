@@ -1,11 +1,12 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
   "productName": "pts_bomber",
   "version": "2.0.0-beta.0",
   "identifier": "ru.pts-team.pts-bomber",
   "build": {
     "beforeDevCommand": "trunk serve",
     "devUrl": "http://localhost:3229",
-    "beforeBuildCommand": "trunk build --release",
+    "beforeBuildCommand": "trunk build",
     "frontendDist": "../dist"
   },
   "app": {
@@ -15,8 +16,8 @@
         "title": "pts_bomber",
         "decorations": false,
         "resizable": true,
-        "width": 400,
-        "height": 350
+        "width": 450,
+        "height": 450
       }
     ],
     "security": {

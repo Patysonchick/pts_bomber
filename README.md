@@ -13,6 +13,11 @@ Telegram канал - [pts_bomber](https://t.me/pts_bomber)
 1. DNS
 2. Sunlight
 
+## Используемые технологии
+* Rust
+* Tauri
+* Leptos
+
 ## Планы
 * Добавить больше мобильных операторов
 * Добавить больше сервисов

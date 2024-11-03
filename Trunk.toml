@@ -5,7 +5,5 @@ target = "./src/index.html"
 ignore = ["./src-tauri"]
 
 [serve]
-address = "0.0.0.0"
 port = 3229
 open = false
-ws_protocol = "ws"
