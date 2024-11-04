@@ -32,8 +32,8 @@ pub fn App() -> impl IntoView {
             </div>
             <span data-tauri-drag-region class="panel w-full font-bold">"Is idle"</span>
             <div class="panel material-symbols-rounded flex-element flex-row">
-                <button id="titlebar-minimize" on:click=move |_| { minimize() }>"minimize"</button>
-                <button id="titlebar-close" on:click=move |_| { minimize() }>"close"</button>
+                <button on:click=move |_| { minimize() }>"minimize"</button>
+                <button on:click=move |_| { close() }>"close"</button>
             </div>
         </div>
         <div class="panel flex-element flex-auto w-full center-elements justify-around">
