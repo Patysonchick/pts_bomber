@@ -1,15 +1,19 @@
-use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
-use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
+#[wasm_bindgen(module = "/src/window.js")]
 extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke)]
     async fn invoke_without_args(cmd: &str) -> JsValue;
+    
+    fn minimize();
+
+    fn toggleMaximize();
+    
+    fn close();
 
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
@@ -28,7 +32,8 @@ pub fn App() -> impl IntoView {
             </div>
             <span data-tauri-drag-region class="panel w-full font-bold">"Is idle"</span>
             <div class="panel material-symbols-rounded flex-element flex-row">
-                <button id="titlebar-minimize">"minimize"</button><button id="titlebar-close">"close"</button>
+                <button id="titlebar-minimize" on:click=move |_| { minimize() }>"minimize"</button>
+                <button id="titlebar-close" on:click=move |_| { minimize() }>"close"</button>
             </div>
         </div>
         <div class="panel flex-element flex-auto w-full center-elements justify-around">
