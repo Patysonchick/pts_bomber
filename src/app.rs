@@ -2,6 +2,7 @@ use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
+use crate::titlebar::Titlebar;
 
 #[wasm_bindgen]
 extern "C" {
@@ -10,15 +11,6 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke)]
     async fn invoke_without_args(cmd: &str) -> JsValue;
-
-    #[wasm_bindgen(module = "/src/window.js")]
-    fn minimize();
-
-    #[wasm_bindgen(module = "/src/window.js")]
-    fn toggleMaximize();
-
-    #[wasm_bindgen(module = "/src/window.js")]
-    fn close();
 
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
@@ -60,18 +52,7 @@ pub fn App() -> impl IntoView {
     };
 
     view! {
-        <div data-tauri-drag-region class="flex-element flex-row w-full justify-between">
-            <div data-tauri-drag-region class="flex-element flex-row">
-                <span data-tauri-drag-region class="panel flex-element font-bold">"pts_bomber"</span>
-                <span class="panel flex-element font-light text"><em>"v2.0.0"</em></span>
-            </div>
-            <span data-tauri-drag-region class="panel w-full font-bold">"Is idle"</span>
-            <div class="panel material-symbols-rounded flex-element flex-row">
-                <button on:click=move |_| { minimize() }>"minimize"</button>
-                <button on:click=move |_| { close() }>"close"</button>
-            </div>
-        </div>
-
+        <Titlebar></Titlebar>
         <div class="panel flex-element flex-auto w-full center-elements justify-around">
             <div class="w-full flex-element center-elements">
                 <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Enter russian number"</div>
