@@ -3,6 +3,7 @@ use leptos::*;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use crate::titlebar::Titlebar;
+use crate::footer::Footer;
 
 #[wasm_bindgen]
 extern "C" {
@@ -67,15 +68,6 @@ pub fn App() -> impl IntoView {
                 <textarea readonly class="panel bg-black w-full">"Logs will be here"</textarea>
             </div>
         </div>
-
-        <div class="flex-element flex-row w-full justify-around">
-            <a href="https://github.com/Patysonchick/pts_bomber" class="panel flex-element rounded-b-none">
-                <img src="public/github-mark.svg" alt="GitHub" class="h-7" />
-            </a>
-            <a href="https://t.me/pts_bomber" class="panel flex-element rounded-b-none">
-                <img src="public/telegram.svg" alt="Telegram" class="h-7" />
-            </a>
-            <button class="panel flex-element rounded-b-none"><span class="material-symbols-rounded">"settings"</span></button>
-        </div>
+        <Footer></Footer>
     }
 }

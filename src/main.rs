@@ -1,5 +1,6 @@
 mod app;
 mod titlebar;
+mod footer;
 
 use app::*;
 use leptos::*;
