@@ -21,8 +21,8 @@ pub enum FormatterTypes {
 
 #[derive(Debug)]
 pub enum FormatterErrors {
-    IncorrectPatter,
     IncorrectLength,
+    IncorrectPatter,
 }
 
 impl Phone {

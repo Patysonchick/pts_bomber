@@ -1,9 +1,9 @@
+use crate::footer::Footer;
+use crate::titlebar::Titlebar;
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
-use crate::titlebar::Titlebar;
-use crate::footer::Footer;
 
 #[wasm_bindgen]
 extern "C" {
@@ -30,10 +30,14 @@ struct FormatPhoneRuArgs<'a> {
     numbers: &'a str,
 }
 
+#[derive(Serialize, Deserialize)]
+struct AttackArgs<'a> {
+    phone: &'a str,
+}
+
 #[component]
 pub fn App() -> impl IntoView {
     let (input_field, set_input_field) = create_signal(String::new());
-    let (phone, set_phone) = create_signal(String::new());
 
     let update_input = move |ev| {
         let v = event_target_value(&ev);
@@ -45,10 +49,20 @@ pub fn App() -> impl IntoView {
         spawn_local(async move {
             let input_field = input_field.get_untracked();
 
-            let args = serde_wasm_bindgen::to_value(&FormatPhoneRuArgs { numbers: &input_field }).unwrap();
+            let args = serde_wasm_bindgen::to_value(&FormatPhoneRuArgs {
+                numbers: &input_field,
+            })
+            .unwrap();
             let formated_phone = invoke("format_phone_ru", args).await.as_string().unwrap();
-            set_phone.set(formated_phone);
-            log(&phone.get_untracked());
+            log(&formated_phone);
+
+            if formated_phone != "0" && formated_phone != "1" {
+                let args = serde_wasm_bindgen::to_value(&AttackArgs {
+                    phone: &formated_phone,
+                })
+                    .unwrap();
+                invoke("attack", args).await;
+            }
         });
     };
 
