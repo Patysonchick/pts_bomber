@@ -1,9 +1,10 @@
-debug/
-target/
+**/debug/
+**/target/
+**/dist/
+**/gen/schemas
 
-Cargo.lock
+**/Cargo.lock
 **/*.rs.bk
-
 *.pdb
 
 .vscode/

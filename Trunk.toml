@@ -1,0 +1,9 @@
+[build]
+target = "./src/index.html"
+
+[watch]
+ignore = ["./src-tauri"]
+
+[serve]
+port = 3229
+open = false
