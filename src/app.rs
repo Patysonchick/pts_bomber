@@ -38,6 +38,7 @@ struct AttackArgs<'a> {
 #[component]
 pub fn App() -> impl IntoView {
     let (input_field, set_input_field) = create_signal(String::new());
+    let (title, set_title) = create_signal(String::from("Is idle"));
 
     let update_input = move |ev| {
         let v = event_target_value(&ev);
@@ -67,7 +68,7 @@ pub fn App() -> impl IntoView {
     };
 
     view! {
-        <Titlebar></Titlebar>
+        <Titlebar title=title/>
         <div class="panel flex-element flex-auto w-full center-elements justify-around">
             <div class="w-full flex-element center-elements">
                 <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Enter russian number"</div>
@@ -82,6 +83,6 @@ pub fn App() -> impl IntoView {
                 <textarea readonly class="panel bg-black w-full">"Logs will be here"</textarea>
             </div>
         </div>
-        <Footer></Footer>
+        <Footer/>
     }
 }
