@@ -38,7 +38,8 @@ struct AttackArgs<'a> {
 #[component]
 pub fn App() -> impl IntoView {
     let (input_field, set_input_field) = create_signal(String::new());
-    let (title, set_title) = create_signal(String::from("Is idle"));
+    let (title, set_title) = create_signal(String::from("Простаивает"));
+    let (logs, set_logs) = create_signal(String::from("Логи будут здесь..."));
 
     let update_input = move |ev| {
         let v = event_target_value(&ev);
@@ -61,7 +62,7 @@ pub fn App() -> impl IntoView {
                 let args = serde_wasm_bindgen::to_value(&AttackArgs {
                     phone: &formated_phone,
                 })
-                    .unwrap();
+                .unwrap();
                 invoke("attack", args).await;
             }
         });
@@ -71,16 +72,16 @@ pub fn App() -> impl IntoView {
         <Titlebar title=title/>
         <div class="panel flex-element flex-auto w-full center-elements justify-around">
             <div class="w-full flex-element center-elements">
-                <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Enter russian number"</div>
+                <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Введи российский номер"</div>
                 <form class="flex-element flex-row center-elements" on:submit=format_input>
                     <span class="panel bg-black">"🇷🇺"</span>
                     <input type="text" placeholder="+7 (9xx) xxx xx-xx" class="bg-black text-center font-bold w-full p-1 border-2 border-green-600 rounded-xl" on:input=update_input />
                     <button type="submit" class="button material-symbols-rounded">"send"</button>
                 </form>
             </div>
-            <div class="w-full flex-element center-elements">
-                <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Logs"</div>
-                <textarea readonly class="panel bg-black w-full">"Logs will be here"</textarea>
+            <div class="h-full w-full flex-element center-elements">
+                <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Логи"</div>
+                <textarea readonly class="panel bg-black h-full w-full">{ logs }</textarea>
             </div>
         </div>
         <Footer/>
