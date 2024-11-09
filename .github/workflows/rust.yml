@@ -6,19 +6,21 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  install:
+    name: Install dependencies
+    runs-on: [ubuntu-latest, windows-latest, "macos-latest"]
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo install --locked create-tauri-app
+      - run: cargo install --locked tauri-cli
+      - run: cargo install --locked trunk
+      - run: cargo install --locked wasm-bindgen-cli
+      - run: cargo install --locked cargo-leptos
+      - run: rustup target add wasm32-unknown-unknown
   build:
-    runs-on: [ubuntu-latest, windows-latest]
+    name: Build
+    runs-on: [ubuntu-latest, windows-latest, "macos-latest"]
     steps:
       - uses: actions/checkout@v4
       - run: cargo --version
-      - name: Install dependencies
-        run:
-          cargo install --locked create-tauri-app 
-          cargo install --locked tauri-cli 
-          cargo install --locked trunk
-          cargo install --locked wasm-bindgen-cli
-          cargo install --locked cargo-leptos
-          rustup target add wasm32-unknown-unknown
-      - name: Build
-        run:
-          cargo tauri build
+      - run: cargo tauri build
