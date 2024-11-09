@@ -1,0 +1,24 @@
+name: Rust
+
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: [ ubuntu-latest, windows-latest, macos-latest ]
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo --version
+      - name: Install dependencies
+        run:
+          cargo install --locked create-tauri-app 
+          cargo install --locked tauri-cli 
+          cargo install --locked trunk
+          cargo install --locked wasm-bindgen-cli
+          cargo install --locked cargo-leptos
+          rustup target add wasm32-unknown-unknown
+      - name: Build
+        run:
+          cargo tauri build
