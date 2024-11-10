@@ -1,7 +1,11 @@
 # pts_bomber
+
+# Внимание
+## **Данные проект несёт исключительно образовательней цели и вообще создаётся как портфолио. Подробнее в разделе [`Используемые технологии`](https://github.com/Patysonchick/pts_bomber/tree/staging?tab=readme-ov-file#%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%83%D0%B5%D0%BC%D1%8B%D0%B5-%D1%82%D0%B5%D1%85%D0%BD%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D0%B8)**
+
 ### **Первый** SMS/звонки бомбер написанный на `Rust`.
 
-Telegram канал - [pts_bomber](https://t.me/pts_bomber)
+Новости и успехи разработки в Telegram канале - [pts_bomber](https://t.me/pts_bomber)
 
 ## Рабочие российские сервисы
 ### SMS
@@ -17,6 +21,14 @@ Telegram канал - [pts_bomber](https://t.me/pts_bomber)
 * Rust
 * Tauri
 * Leptos
+* Git
+* GitHub
+* GitHub Actions
+* Arch Linux
+
+## Импользуемое оборудование
+* Я - Lenovo ThinkPad T480(Intel Core i7-8550U + Nvidia GeForce MX150) на Arch Linux
+* [dandaniel2](https://github.com/dandaniel2) - Xiaomi Mi Notebook Pro 15.6(Intel Core i7-8550U + Nvidia GeForce MX150) на macOS
 
 ## Планы
 * Добавить больше мобильных операторов

@@ -1,6 +1,14 @@
 use leptos::*;
 use wasm_bindgen::prelude::*;
 
+const VERSION: &str = "v2.0.0-beta.1";
+
+#[derive(Clone)]
+pub enum Status {
+    IsIdling,
+    Attacking,
+}
+
 #[wasm_bindgen(module = "/src/window.js")]
 extern "C" {
     #[wasm_bindgen]
@@ -14,14 +22,30 @@ extern "C" {
 }
 
 #[component]
-pub fn Titlebar() -> impl IntoView {
+pub fn Titlebar(title: ReadSignal<Status>) -> impl IntoView {
     view! {
         <div data-tauri-drag-region class="flex-element flex-row w-full justify-between">
-            <div data-tauri-drag-region class="flex-element flex-row">
+            <div data-tauri-drag-region class="flex-element flex-row w-full">
                 <span data-tauri-drag-region class="panel flex-element font-bold">"pts_bomber"</span>
-                <span class="panel flex-element font-light text"><em>"v2.0.0"</em></span>
+                <span class="panel flex-element w-full font-light"><em>{VERSION}</em></span>
+                <span
+                    data-tauri-drag-region
+                    class="panel flex-element w-full font-bold"
+                    class: bg-neutral-800 = move || match title.get() {
+                        Status::IsIdling => true,
+                        Status::Attacking => false
+                    }
+                    class: bg-red-700 = move || match title.get() {
+                        Status::IsIdling => false,
+                        Status::Attacking => true
+                    }
+                >{
+                    move || match title.get() {
+                        Status::IsIdling => "Простаивает",
+                        Status::Attacking => "Атака"
+                    }
+                }</span>
             </div>
-            <span data-tauri-drag-region class="panel w-full font-bold">"Is idle"</span>
             <div class="panel material-symbols-rounded flex-element flex-row">
                 <button on:click=move |_| { minimize() }>"minimize"</button>
                 <button on:click=move |_| { close() }>"close"</button>

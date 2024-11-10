@@ -1,0 +1,32 @@
+name: Rust
+
+on: [push, pull_request]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OS dependencies
+        run: |
+          sudo apt update
+          sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+      - name: Install create-tauri-app
+        run: cargo install --locked create-tauri-app
+      - name: Install tauri-cli
+        run: cargo install --locked tauri-cli
+      - name: Install trunk
+        run: cargo install --locked trunk
+      - name: Install wasm-bindgen-cli
+        run: cargo install --locked wasm-bindgen-cli
+      - name: Install cargo-leptos
+        run: cargo install --locked cargo-leptos
+      - name: Install target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Build
+        run: cargo tauri build

@@ -1,6 +1,6 @@
 [package]
 name = "pts_bomber-ui"
-version = "2.0.0-beta.0"
+version = "2.0.0-beta.1"
 edition = "2021"
 
 [dependencies]
@@ -14,3 +14,7 @@ console_error_panic_hook = "0.1.7"
 
 [workspace]
 members = ["src-tauri"]
+
+[profile.release]
+lto = true
+opt-level = 'z'
