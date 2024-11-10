@@ -13,8 +13,8 @@ jobs:
 
       - name: Install OS dependencies
         run: |
-          apt update
-          apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+          sudo apt update
+          sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
       - name: Install create-tauri-app
         run: cargo install --locked create-tauri-app
       - name: Install tauri-cli
