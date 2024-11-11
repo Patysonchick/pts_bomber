@@ -1,7 +1,7 @@
 use leptos::*;
 use wasm_bindgen::prelude::*;
 
-const VERSION: &str = "v2.0.0-beta.1";
+const VERSION: &str = "v2.0.0-beta.2";
 
 #[derive(Clone)]
 pub enum Status {
