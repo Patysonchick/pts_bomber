@@ -3,7 +3,7 @@ use wasm_bindgen::prelude::*;
 
 const VERSION: &str = "v2.0.0-beta.2";
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub enum Status {
     IsIdling,
     Attacking,
@@ -31,14 +31,8 @@ pub fn Titlebar(title: ReadSignal<Status>) -> impl IntoView {
                 <span
                     data-tauri-drag-region
                     class="panel flex-element w-full font-bold"
-                    class: bg-neutral-800 = move || match title.get() {
-                        Status::IsIdling => true,
-                        Status::Attacking => false
-                    }
-                    class: bg-red-700 = move || match title.get() {
-                        Status::IsIdling => false,
-                        Status::Attacking => true
-                    }
+                    class: bg-neutral-800 = move || title.get() == Status::IsIdling
+                    class: bg-red-700 = move || title.get() == Status::Attacking
                 >{
                     move || match title.get() {
                         Status::IsIdling => "Простаивает",
