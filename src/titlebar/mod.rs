@@ -9,7 +9,7 @@ pub enum Status {
     Attacking,
 }
 
-#[wasm_bindgen(module = "/src/window.js")]
+#[wasm_bindgen(module = "/src/titlebar/titlebar.js")]
 extern "C" {
     #[wasm_bindgen]
     fn minimize();
