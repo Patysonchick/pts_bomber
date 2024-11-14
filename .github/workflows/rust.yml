@@ -9,18 +9,14 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  install_dependencies:
-    name: Install dependencies
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-          os: [ubuntu-latest, windows-latest, macos-latest]
+  build_upload_ubuntu:
+    name: Build and upload Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4.2.2
 
       - name: Install OS dependencies
-        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt update
           sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
@@ -37,30 +33,16 @@ jobs:
         run: cargo install --locked cargo-leptos
       - name: Install target
         run: rustup target add wasm32-unknown-unknown
-  build:
-    name: Build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
-    steps:
       - name: Build
         run: cargo tauri build
-  upload:
-    name: Upload artifact
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
-    steps:
-      if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v4.4.3
-      with:
-        path: [
-          '/home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber',
-          /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb,
-          /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
-          /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
-        ]
+      - name: Upload
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          path: [
+            '/home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber',
+            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb,
+            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
+            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
+          ]
