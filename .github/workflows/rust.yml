@@ -3,7 +3,8 @@ name: Rust
 on:
   push:
     tags:
-      - "*"
+      - '*'
+  pull_request:
 
 env:
   CARGO_TERM_COLOR: always
@@ -41,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           path: [
-            '/home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber',
+            /home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber,
             /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb,
             /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
             /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
