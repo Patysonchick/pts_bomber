@@ -11,12 +11,10 @@ env:
 jobs:
   install_dependencies:
     name: Install dependencies
-
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
           os: [ubuntu-latest, windows-latest, macos-latest]
-
-    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4.2.2
@@ -41,24 +39,20 @@ jobs:
         run: rustup target add wasm32-unknown-unknown
   build:
     name: Build
-
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-
-    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Build
         run: cargo tauri build
   upload:
     name: Upload artifact
-
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-
-    runs-on: ${{ matrix.os }}
 
     steps:
       if: matrix.os == 'ubuntu-latest'
