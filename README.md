@@ -25,6 +25,7 @@
 * Git
 * GitHub
 * GitHub Actions
+* [![Rust](https://github.com/Patysonchick/pts_bomber/actions/workflows/rust.yml/badge.svg?branch=staging)](https://github.com/Patysonchick/pts_bomber/actions/workflows/rust.yml)
 * Arch Linux
 
 ## Импользуемое оборудование
