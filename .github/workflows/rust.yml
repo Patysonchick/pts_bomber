@@ -43,16 +43,18 @@ jobs:
         with:
           name: 'pts_bomber_ubuntu'
           path: |
-            **/target/release/pts_bomber
-            **/target/release/bundle/deb/pts_bomber_*_amd64.deb
-            **/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
-            **/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
+            **/pts_bomber
+            **/pts_bomber_*_amd64.deb
+            **/pts_bomber-*.x86_64.rpm
   build_upload_windows:
     name: Build and upload Windows
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4.2.2
+
+      - name: Install OS dependencies
+        run: rustup default stable-msvc
 
       - name: Install create-tauri-app
         run: cargo install --locked create-tauri-app
@@ -75,8 +77,8 @@ jobs:
         with:
           name: 'pts_bomber_windows'
           path: |
-            **/target/release/pts_bomber.exe
-            **/target/release/bundle/nsis/pts_bomber_2.0.0-*_x64-setup.exe
+            **/pts_bomber.exe
+            **/pts_bomber_2.0.0-*_x64-setup.exe
   build_upload_macos:
     name: Build and upload macOS
     runs-on: macos-latest
@@ -105,5 +107,6 @@ jobs:
         with:
           name: 'pts_bomber_macos'
           path: |
-            **/target/release/bundle/macos/pts_bomber.app
-            **/target/release/bundle/dmg/pts_bomber_*_x64.dmg
+            **/pts_bomber
+            **/pts_bomber.app
+            **/pts_bomber_*_aarch64.dmg
