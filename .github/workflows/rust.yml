@@ -2,23 +2,31 @@ name: Rust
 
 on:
   push:
-    branches: ["master", "develop"]
-  pull_request:
-    branches: ["master", "develop"]
+    tags:
+      - "*"
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  install_dependencies:
+    name: Install dependencies
+
+    strategy:
+      matrix:
+          os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Install OS dependencies
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt update
           sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
       - name: Install create-tauri-app
         run: cargo install --locked create-tauri-app
       - name: Install tauri-cli
@@ -31,6 +39,34 @@ jobs:
         run: cargo install --locked cargo-leptos
       - name: Install target
         run: rustup target add wasm32-unknown-unknown
+  build:
+    name: Build
 
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
       - name: Build
         run: cargo tauri build
+  upload:
+    name: Upload artifact
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4.4.3
+      with:
+        path: [
+          '/home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber',
+          /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb,
+          /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
+          /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
+        ]
