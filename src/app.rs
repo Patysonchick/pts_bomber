@@ -1,7 +1,9 @@
+use crate::about::About;
 use crate::footer::Footer;
 use crate::titlebar::{Status, Titlebar};
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
+use leptos_router::*;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
@@ -73,21 +75,28 @@ pub fn App() -> impl IntoView {
     };
 
     view! {
-        <Titlebar title=title/>
-        <div class="panel flex-element flex-auto w-full center-elements justify-around">
-            <div class="w-full flex-element center-elements">
-                <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Введи российский номер"</div>
-                <form class="flex-element flex-row center-elements" on:submit=attack>
-                    <span class="panel bg-black">"🇷🇺"</span>
-                    <input type="text" placeholder="+7 (9xx) xxx xx-xx" class="bg-black text-center font-bold w-full p-1 border-2 border-green-600 rounded-xl" on:input=update_input />
-                    <button type="submit" class="button material-symbols-rounded">"send"</button>
-                </form>
-            </div>
-            <div class="h-full w-full flex-element center-elements">
-                <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Логи"</div>
-                <textarea readonly class="panel bg-black h-full w-full">{ logs }</textarea>
-            </div>
-        </div>
-        <Footer/>
+        <Router>
+            <Routes>
+                <Route path="/" view=move || view! {
+                    <Titlebar title=title/>
+                    <div class="panel flex-element flex-auto w-full center-elements justify-around">
+                        <div class="w-full flex-element center-elements">
+                            <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Введи российский номер"</div>
+                            <form class="flex-element flex-row center-elements" on:submit=attack>
+                                <span class="panel bg-black">"🇷🇺"</span>
+                                <input type="text" placeholder="+7 (9xx) xxx xx-xx" class="bg-black text-center font-bold w-full p-1 border-2 border-green-600 rounded-xl" on:input=update_input/>
+                                <button type="submit" class="button material-symbols-rounded">"send"</button>
+                            </form>
+                        </div>
+                        <div class="h-full w-full flex-element center-elements">
+                            <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Логи"</div>
+                            <textarea readonly class="panel bg-black h-full w-full">{ logs }</textarea>
+                        </div>
+                    </div>
+                    <Footer/>
+                }/>
+                <Route path="/about" view=About/>
+            </Routes>
+        </Router>
     }
 }
