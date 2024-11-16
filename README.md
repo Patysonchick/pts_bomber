@@ -7,11 +7,16 @@ Telegram канал - [pts_bomber](https://t.me/pts_bomber)
 ### SMS
 1. 4 лапы
 2. Mvideo
+3. NFApteka
+### Операторы
+1. Megafon
+2. t2
 ### Сервисные SMS
 1. Telegram
 ### Звонки
 1. DNS
 2. Sunlight
+3. NFApteka
 
 ## Используемые технологии
 * Rust
