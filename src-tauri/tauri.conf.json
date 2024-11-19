@@ -19,12 +19,6 @@
         "resizable": true,
         "width": 450,
         "height": 400
-      },
-      {
-        "label": "about",
-        "title": "About me",
-        "url": "/about",
-        "visible": false
       }
     ],
     "security": {

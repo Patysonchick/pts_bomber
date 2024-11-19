@@ -4,8 +4,6 @@ mod attack;
 mod phone;
 mod services;
 
-use tauri::{AppHandle, Manager};
-
 use crate::attack::send;
 use crate::phone::{Country, FormatterErrors, Phone};
 use crate::services::Victim;
@@ -60,7 +58,10 @@ async fn attack(phone: String) {
 }
 
 #[tauri::command]
-async fn show_about_window(app: AppHandle) {
-    let about_window = app.get_webview_window("about").unwrap();
-    about_window.show().unwrap();
+async fn show_about_window(app: tauri::AppHandle) {
+    tauri::WebviewWindowBuilder::new(&app, "about", tauri::WebviewUrl::App("/about".into()))
+        .title("О программе")
+        .inner_size(350.0, 300.0)
+        .build()
+        .unwrap();
 }
