@@ -25,7 +25,7 @@ pub fn Footer() -> impl IntoView {
                     invoke_without_args("show_about_window").await;
                 });
             }>
-                <span class="material-symbols-rounded">"settings"</span>
+                <span class="material-symbols-rounded">"info"</span>
             </button>
         </div>
     }
