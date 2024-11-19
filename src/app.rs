@@ -51,25 +51,29 @@ pub fn App() -> impl IntoView {
     let attack = move |ev: SubmitEvent| {
         ev.prevent_default();
         spawn_local(async move {
-            let input_field = input_field.get_untracked();
+            if title.get_untracked() != Status::Attacking {
+                let input_field = input_field.get_untracked();
 
-            let args = serde_wasm_bindgen::to_value(&FormatPhoneRuArgs {
-                numbers: &input_field,
-            })
-            .unwrap();
-            let formated_phone = invoke("format_phone_ru", args).await.as_string().unwrap();
-            log(&formated_phone);
-
-            if formated_phone != "0" && formated_phone != "1" {
-                set_title.set(Status::Attacking);
-                log("Attacking");
-                let args = serde_wasm_bindgen::to_value(&AttackArgs {
-                    phone: &formated_phone,
+                let args = serde_wasm_bindgen::to_value(&FormatPhoneRuArgs {
+                    numbers: &input_field,
                 })
                 .unwrap();
-                invoke("attack", args).await;
-                set_title.set(Status::IsIdling);
-                log("Ended");
+                let formated_phone = invoke("format_phone_ru", args).await.as_string().unwrap();
+                log(&formated_phone);
+
+                if formated_phone != "0" && formated_phone != "1" {
+                    set_title.set(Status::Attacking);
+                    log("Attacking");
+                    let args = serde_wasm_bindgen::to_value(&AttackArgs {
+                        phone: &formated_phone,
+                    })
+                    .unwrap();
+                    invoke("attack", args).await;
+                    set_title.set(Status::IsIdling);
+                    log("Ended");
+                }
+            } else {
+                log("Tried attack while attacking");
             }
         });
     };
