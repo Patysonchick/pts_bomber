@@ -4,6 +4,8 @@ mod attack;
 mod phone;
 mod services;
 
+use tauri::{AppHandle, Manager};
+
 use crate::attack::send;
 use crate::phone::{Country, FormatterErrors, Phone};
 use crate::services::Victim;
@@ -13,14 +15,13 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![echo, format_phone_ru, attack])
+        .invoke_handler(tauri::generate_handler![
+            format_phone_ru,
+            attack,
+            show_about_window
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-}
-
-#[tauri::command]
-fn echo(msg: &str) {
-    println!("Echo {}", msg);
 }
 
 #[tauri::command]
@@ -56,4 +57,10 @@ async fn attack(phone: String) {
 
     println!();
     let _ = send(victim).await;
+}
+
+#[tauri::command]
+async fn show_about_window(app: AppHandle) {
+    let about_window = app.get_webview_window("about").unwrap();
+    about_window.show().unwrap();
 }

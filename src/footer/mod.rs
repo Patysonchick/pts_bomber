@@ -1,4 +1,16 @@
 use leptos::*;
+use serde::{Deserialize, Serialize};
+use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::JsValue;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
+    async fn invoke(cmd: &str, args: JsValue) -> JsValue;
+
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name = invoke)]
+    async fn invoke_without_args(cmd: &str) -> JsValue;
+}
 #[component]
 pub fn Footer() -> impl IntoView {
     view! {
@@ -9,10 +21,12 @@ pub fn Footer() -> impl IntoView {
             <a href="https://t.me/pts_bomber" class="panel flex-element rounded-b-none" target="_blank">
                 <img src="../public/telegram.svg" alt="Telegram" class="h-7" />
             </a>
-            <button class="panel flex-element rounded-b-none">
-                <a href="http://127.0.0.1:3229/about">
-                    <span class="material-symbols-rounded">"settings"</span>
-                </a>
+            <button class="panel flex-element rounded-b-none" on:click=move |_| {
+                spawn_local(async move {
+                    invoke_without_args("show_about_window").await;
+                });
+            }>
+                <span class="material-symbols-rounded">"settings"</span>
             </button>
         </div>
     }

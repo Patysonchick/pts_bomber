@@ -69,7 +69,7 @@ pub fn App() -> impl IntoView {
                 .unwrap();
                 invoke("attack", args).await;
                 set_title.set(Status::IsIdling);
-                log("Ended")
+                log("Ended");
             }
         });
     };
