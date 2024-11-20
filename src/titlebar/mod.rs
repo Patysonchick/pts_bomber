@@ -1,8 +1,6 @@
 use leptos::*;
 use wasm_bindgen::prelude::*;
 
-const VERSION: &str = "v2.0.0-beta.2";
-
 #[derive(Clone, PartialEq)]
 pub enum Status {
     IsIdling,
@@ -23,11 +21,13 @@ extern "C" {
 
 #[component]
 pub fn Titlebar(title: ReadSignal<Status>) -> impl IntoView {
+    let version = format!("v{}", env!("CARGO_PKG_VERSION"));
+
     view! {
         <div data-tauri-drag-region class="flex-element flex-row w-full justify-between">
             <div data-tauri-drag-region class="flex-element flex-row w-full">
                 <span data-tauri-drag-region class="panel flex-element font-bold">"pts_bomber"</span>
-                <span class="panel flex-element w-full font-light"><em>{VERSION}</em></span>
+                <span class="panel flex-element w-full font-light"><em>{version}</em></span>
                 <span
                     data-tauri-drag-region
                     class="panel flex-element w-full font-bold"
