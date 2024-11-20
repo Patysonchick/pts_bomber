@@ -61,7 +61,7 @@ async fn attack(phone: String) {
 async fn show_about_window(app: tauri::AppHandle) {
     tauri::WebviewWindowBuilder::new(&app, "about", tauri::WebviewUrl::App("/about".into()))
         .title("О программе")
-        .inner_size(400.0, 350.0)
+        .inner_size(350.0, 600.0)
         .resizable(false)
         .build()
         .unwrap();
