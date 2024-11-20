@@ -10,6 +10,7 @@ Telegram канал - [pts_bomber](https://t.me/pts_bomber)
 ### Операторы
 1. Megafon
 2. t2
+3. Yota
 ### Сервисные SMS
 1. Telegram
 ### Звонки

