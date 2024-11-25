@@ -21,17 +21,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
-
-      - name: Install create-tauri-app
-        run: cargo install --locked create-tauri-app
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+      
       - name: Install tauri-cli
-        run: cargo install --locked tauri-cli
+        run: cargo binstall tauri-cli
       - name: Install trunk
-        run: cargo install --locked trunk
+        run: cargo binstall trunk
       - name: Install wasm-bindgen-cli
-        run: cargo install --locked wasm-bindgen-cli
-      - name: Install cargo-leptos
-        run: cargo install --locked cargo-leptos
+        run: cargo binstall wasm-bindgen-cli
       - name: Install target
         run: rustup target add wasm32-unknown-unknown
 
@@ -43,10 +40,10 @@ jobs:
         with:
           name: 'pts_bomber_ubuntu'
           path: |
-            /home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber
-            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb
-            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
-            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
+            **/pts_bomber/target/release/pts_bomber
+            **/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb
+            **/pts_bomber/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
+            **/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
           compression-level: 9
   build_upload_windows:
     name: Build and upload Windows
@@ -56,27 +53,14 @@ jobs:
       - uses: actions/checkout@v4.2.2
 
       - name: Install OS dependencies
-        run: |
-          cd ..
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          ./bootstrap-vcpkg.bat
-          ./vcpkg.exe install openssl-windows:x64-windows
-          ./vcpkg.exe install openssl:x64-windows-static
-          ./vcpkg.exe integrate install
-          set VCPKGRS_DYNAMIC=1
-          cd ..
-
-      - name: Install create-tauri-app
-        run: cargo install --locked create-tauri-app
+        run: Set-ExecutionPolicy Unrestricted -Scope Process; iex (iwr "https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.ps1").Content
+      
       - name: Install tauri-cli
-        run: cargo install --locked tauri-cli
+        run: cargo binstall tauri-cli
       - name: Install trunk
-        run: cargo install --locked trunk
+        run: cargo binstall trunk
       - name: Install wasm-bindgen-cli
-        run: cargo install --locked wasm-bindgen-cli
-      - name: Install cargo-leptos
-        run: cargo install --locked cargo-leptos
+        run: cargo binstall wasm-bindgen-cli
       - name: Install target
         run: rustup target add wasm32-unknown-unknown
 
@@ -88,8 +72,8 @@ jobs:
         with:
           name: 'pts_bomber_windows'
           path: |
-            **/pts_bomber.exe
-            **/pts_bomber_2.0.0-*_x64-setup.exe
+            **/pts_bomber/target/release/pts_bomber.exe
+            **/pts_bomber/target/release/bundle/nsis/pts_bomber_*_x64-setup.exe
           compression-level: 9
   build_upload_macos:
     name: Build and upload macOS
@@ -98,16 +82,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Install create-tauri-app
-        run: cargo install --locked create-tauri-app
+      - name: Install OS dependencies
+        run: |
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+      
       - name: Install tauri-cli
-        run: cargo install --locked tauri-cli
+        run: cargo binstall tauri-cli
       - name: Install trunk
-        run: cargo install --locked trunk
+        run: cargo binstall trunk
       - name: Install wasm-bindgen-cli
-        run: cargo install --locked wasm-bindgen-cli
-      - name: Install cargo-leptos
-        run: cargo install --locked cargo-leptos
+        run: cargo binstall wasm-bindgen-cli      
       - name: Install target
         run: rustup target add wasm32-unknown-unknown
 
@@ -119,7 +103,7 @@ jobs:
         with:
           name: 'pts_bomber_macos'
           path: |
-            /Users/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber
-            /Users/runner/work/pts_bomber/pts_bomber/target/release/bundle/macos/pts_bomber.app
-            /Users/runner/work/pts_bomber/pts_bomber/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
+            **/pts_bomber/target/release/pts_bomber
+            **/pts_bomber/target/release/bundle/macos/pts_bomber.app
+            **/pts_bomber/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
           compression-level: 9
