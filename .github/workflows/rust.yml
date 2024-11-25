@@ -40,11 +40,12 @@ jobs:
         with:
           name: 'pts_bomber_ubuntu'
           path: |
-            **/pts_bomber/target/release/pts_bomber
-            **/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb
-            **/pts_bomber/target/release/bundle/rpm/pts_bomber-*.x86_64.rpm
-            **/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
+            /home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber
+            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb
+            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/rpm/pts_bomber-*-1.x86_64.rpm
+            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
           compression-level: 9
+          if-no-files-found: error
   build_upload_windows:
     name: Build and upload Windows
     runs-on: windows-latest
@@ -75,6 +76,7 @@ jobs:
             **/pts_bomber/target/release/pts_bomber.exe
             **/pts_bomber/target/release/bundle/nsis/pts_bomber_*_x64-setup.exe
           compression-level: 9
+          if-no-files-found: error
   build_upload_macos:
     name: Build and upload macOS
     runs-on: macos-latest
@@ -103,7 +105,8 @@ jobs:
         with:
           name: 'pts_bomber_macos'
           path: |
-            **/pts_bomber/target/release/pts_bomber
-            **/pts_bomber/target/release/bundle/macos/pts_bomber.app
-            **/pts_bomber/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
+            /Users/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber
+            /Users/runner/work/pts_bomber/pts_bomber/target/release/bundle/macos/pts_bomber.app
+             /Users/runner/work/pts_bomber/pts_bomber/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
           compression-level: 9
+          if-no-files-found: error
