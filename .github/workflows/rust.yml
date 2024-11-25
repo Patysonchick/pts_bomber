@@ -73,8 +73,9 @@ jobs:
         with:
           name: 'pts_bomber_windows'
           path: |
-            **/pts_bomber/target/release/pts_bomber.exe
-            **/pts_bomber/target/release/bundle/nsis/pts_bomber_*_x64-setup.exe
+            D:\a\pts_bomber\pts_bomber\target\release\pts_bomber.exe
+            D:\a\pts_bomber\pts_bomber\target\release\bundle\msi\pts_bomber_*_x64_en-US.msi
+            D:\a\pts_bomber\pts_bomber\target\release\bundle\nsis\pts_bomber_*_x64-setup.exe
           compression-level: 9
           if-no-files-found: error
   build_upload_macos:
