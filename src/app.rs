@@ -37,11 +37,16 @@ struct AttackArgs<'a> {
     phone: &'a str,
 }
 
+#[derive(Serialize, Deserialize)]
+struct ShowFormatterErrorArgs<'a> {
+    e: &'a str,
+}
+
 #[component]
 pub fn App() -> impl IntoView {
     let (input_field, set_input_field) = create_signal(String::new());
     let (title, set_title) = create_signal(Status::IsIdling);
-    let (logs, set_logs) = create_signal(String::from("Логи будут здесь..."));
+    // let (logs, set_logs) = create_signal(String::from("Логи будут здесь..."));
 
     let update_input = move |ev| {
         let v = event_target_value(&ev);
@@ -64,13 +69,21 @@ pub fn App() -> impl IntoView {
                 if formated_phone != "0" && formated_phone != "1" {
                     set_title.set(Status::Attacking);
                     log("Attacking");
+
                     let args = serde_wasm_bindgen::to_value(&AttackArgs {
                         phone: &formated_phone,
                     })
                     .unwrap();
                     invoke("attack", args).await;
+
                     set_title.set(Status::IsIdling);
                     log("Ended");
+                } else {
+                    let args = serde_wasm_bindgen::to_value(&ShowFormatterErrorArgs {
+                        e: &formated_phone,
+                    })
+                    .unwrap();
+                    invoke("show_formatter_error", args).await;
                 }
             } else {
                 log("Tried attack while attacking");
@@ -92,10 +105,10 @@ pub fn App() -> impl IntoView {
                                 <button type="submit" class="button material-symbols-rounded">"send"</button>
                             </form>
                         </div>
-                        <div class="h-full w-full flex-element center-elements">
-                            <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Логи"</div>
-                            <textarea readonly class="panel bg-black h-full w-full">{ logs }</textarea>
-                        </div>
+                        // <div class="h-full w-full flex-element center-elements">
+                        //     <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Логи"</div>
+                        //     <textarea readonly class="panel bg-black h-full w-full">{ logs }</textarea>
+                        // </div>
                     </div>
                     <Footer/>
                 }/>

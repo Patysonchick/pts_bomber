@@ -7,6 +7,7 @@ mod services;
 use crate::attack::send;
 use crate::phone::{Country, FormatterErrors, Phone};
 use crate::services::Victim;
+use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 fn main() {
@@ -15,6 +16,7 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             format_phone_ru,
+            show_formatter_error,
             attack,
             show_about_window
         ])
@@ -37,6 +39,22 @@ fn format_phone_ru(numbers: &str) -> String {
             }
         },
     }
+}
+
+#[tauri::command]
+async fn show_formatter_error(app: tauri::AppHandle, e: String) {
+    let message = match e.as_str() {
+        "0" => app.dialog().message("Неправильная длина номера"),
+        "1" => app
+            .dialog()
+            .message("Неправильный шаблон номера\nОн должен быть похожим на 7 (9xx) xxx-xx-xx"),
+        _ => app.dialog().message("Неизвестная ошибка"),
+    };
+
+    message
+        .kind(MessageDialogKind::Error)
+        .title("Неправильно набран номер")
+        .blocking_show();
 }
 
 #[tauri::command]
