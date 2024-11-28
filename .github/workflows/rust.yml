@@ -10,19 +10,27 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build_upload_ubuntu:
-    name: Build and upload Ubuntu
-    runs-on: ubuntu-latest
+  build_upload:
+    name: Build and upload
+
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest-large, macos-latest ]
 
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Install OS dependencies
+      - name: Install OS dependencies(Ubuntu and macOS)
+        if: matrix.os == 'ubuntu-latest' && matrix.os == 'macos-latest-large' && matrix.os == 'macos-latest'
         run: |
           sudo apt update
           sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
           curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-      
+      - name: Install OS dependencies(Windows)
+        if: matrix.os == 'windows-latest'
+        run: Set-ExecutionPolicy Unrestricted -Scope Process; iex (iwr "https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.ps1").Content
+
       - name: Install tauri-cli
         run: cargo binstall tauri-cli
       - name: Install trunk
@@ -35,78 +43,50 @@ jobs:
       - name: Build
         run: cargo tauri build
 
-      - name: Upload
+      - name: Upload artifact(Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4.4.3
         with:
           name: 'pts_bomber_ubuntu'
           path: |
-            /home/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber
-            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/deb/pts_bomber_*_amd64.deb
-            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/rpm/pts_bomber-*-1.x86_64.rpm
-            /home/runner/work/pts_bomber/pts_bomber/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
+            ${{ github.workspace }}/target/release/pts_bomber
+            ${{ github.workspace }}/target/release/bundle/deb/pts_bomber_*_amd64.deb
+            ${{ github.workspace }}/target/release/bundle/rpm/pts_bomber-*-1.x86_64.rpm
+            ${{ github.workspace }}/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
           compression-level: 9
           if-no-files-found: error
-  build_upload_windows:
-    name: Build and upload Windows
-    runs-on: windows-latest
 
-    steps:
-      - uses: actions/checkout@v4.2.2
-
-      - name: Install OS dependencies
-        run: Set-ExecutionPolicy Unrestricted -Scope Process; iex (iwr "https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.ps1").Content
-      
-      - name: Install tauri-cli
-        run: cargo binstall tauri-cli
-      - name: Install trunk
-        run: cargo binstall trunk
-      - name: Install wasm-bindgen-cli
-        run: cargo binstall wasm-bindgen-cli
-      - name: Install target
-        run: rustup target add wasm32-unknown-unknown
-
-      - name: Build
-        run: cargo tauri build
-
-      - name: Upload
+      - name: Upload(Windows)
+        if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4.4.3
         with:
           name: 'pts_bomber_windows'
           path: |
-            D:\a\pts_bomber\pts_bomber\target\release\pts_bomber.exe
-            D:\a\pts_bomber\pts_bomber\target\release\bundle\msi\pts_bomber_*_x64_en-US.msi
-            D:\a\pts_bomber\pts_bomber\target\release\bundle\nsis\pts_bomber_*_x64-setup.exe
+            ${{ github.workspace }}\target\release\pts_bomber.exe
+            ${{ github.workspace }}\target\release\bundle\msi\pts_bomber_*_x64_en-US.msi
+            ${{ github.workspace }}\target\release\bundle\nsis\pts_bomber_*_x64-setup.exe
           compression-level: 9
           if-no-files-found: error
-  build_upload_macos:
-    name: Build and upload macOS
-    runs-on: macos-latest
 
-    steps:
-      - uses: actions/checkout@v4.2.2
-
-      - name: Install OS dependencies
-        run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-      
-      - name: Install tauri-cli
-        run: cargo binstall tauri-cli
-      - name: Install trunk
-        run: cargo binstall trunk
-      - name: Install wasm-bindgen-cli
-        run: cargo binstall wasm-bindgen-cli      
-      - name: Install target
-        run: rustup target add wasm32-unknown-unknown
-
-      - name: Build
-        run: cargo tauri build
-
-      - name: Upload
+      - name: Upload(macOS Intel)
+        if: matrix.os == 'macos-latest-large'
         uses: actions/upload-artifact@v4.4.3
         with:
-          name: 'pts_bomber_macos'
+          name: 'pts_bomber_macos_intel'
           path: |
-            /Users/runner/work/pts_bomber/pts_bomber/target/release/pts_bomber
-            /Users/runner/work/pts_bomber/pts_bomber/target/release/bundle/macos/pts_bomber.app
-             /Users/runner/work/pts_bomber/pts_bomber/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
+            ${{ github.workspace }}/target/release/pts_bomber
+            ${{ github.workspace }}/target/release/bundle/macos/pts_bomber.app
+            ${{ github.workspace }}/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
+          compression-level: 9
+          if-no-files-found: error
+      - name: Upload(macOS ARM)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: 'pts_bomber_macos_arm'
+          path: |
+            ${{ github.workspace }}/target/release/pts_bomber
+            ${{ github.workspace }}/target/release/bundle/macos/pts_bomber.app
+            ${{ github.workspace }}/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
           compression-level: 9
           if-no-files-found: error
