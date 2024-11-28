@@ -13,21 +13,21 @@ jobs:
   build_upload:
     name: Build and upload
 
+    runs-on: ${{ matrix.platform }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest-large, macos-latest ]
-    runs-on: ${{ matrix.platform }}
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Install OS dependencies(Ubuntu and macOS)
-        if: matrix.os == 'ubuntu-latest' && matrix.os == 'macos-latest-large' && matrix.os == 'macos-latest'
+      - name: Install OS dependencies (Ubuntu and macOS)
+        if: matrix.os == 'ubuntu-latest' && matrix.os == 'macos-latest'
         run: |
           sudo apt update
           sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
           curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-      - name: Install OS dependencies(Windows)
+      - name: Install OS dependencies (Windows)
         if: matrix.os == 'windows-latest'
         run: Set-ExecutionPolicy Unrestricted -Scope Process; iex (iwr "https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.ps1").Content
 
@@ -55,7 +55,6 @@ jobs:
             ${{ github.workspace }}/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
           compression-level: 9
           if-no-files-found: error
-
       - name: Upload(Windows)
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4.4.3
@@ -65,18 +64,6 @@ jobs:
             ${{ github.workspace }}\target\release\pts_bomber.exe
             ${{ github.workspace }}\target\release\bundle\msi\pts_bomber_*_x64_en-US.msi
             ${{ github.workspace }}\target\release\bundle\nsis\pts_bomber_*_x64-setup.exe
-          compression-level: 9
-          if-no-files-found: error
-
-      - name: Upload(macOS Intel)
-        if: matrix.os == 'macos-latest-large'
-        uses: actions/upload-artifact@v4.4.3
-        with:
-          name: 'pts_bomber_macos_intel'
-          path: |
-            ${{ github.workspace }}/target/release/pts_bomber
-            ${{ github.workspace }}/target/release/bundle/macos/pts_bomber.app
-            ${{ github.workspace }}/target/release/bundle/dmg/pts_bomber_*_aarch64.dmg
           compression-level: 9
           if-no-files-found: error
       - name: Upload(macOS ARM)
