@@ -21,17 +21,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Install OS dependencies (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
+      - if: matrix.os == 'ubuntu-latest'
+        name: Install OS dependencies (Ubuntu)
         run: |
           sudo apt update
           sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
           curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-      - name: Install OS dependencies (Windows)
-        if: matrix.os == 'windows-latest'
+      - if: matrix.os == 'windows-latest'
+        name: Install OS dependencies (Windows)
         run: Set-ExecutionPolicy Unrestricted -Scope Process; iex (iwr "https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.ps1").Content
-      - name: Install OS dependencies (macOS)
-        if: matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-latest'
+        name: Install OS dependencies (macOS)
         run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
 
       - name: Install tauri-cli
@@ -46,8 +46,8 @@ jobs:
       - name: Build
         run: cargo tauri build
 
-      - name: Upload artifact (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
+      - if: matrix.os == 'ubuntu-latest'
+        name: Upload artifact (Ubuntu)
         uses: actions/upload-artifact@v4.4.3
         with:
           name: 'pts_bomber_ubuntu'
@@ -58,8 +58,8 @@ jobs:
             ${{ github.workspace }}/target/release/bundle/appimage/pts_bomber_*_amd64.AppImage
           compression-level: 9
           if-no-files-found: error
-      - name: Upload (Windows)
-        if: matrix.os == 'windows-latest'
+      - if: matrix.os == 'windows-latest'
+        name: Upload (Windows)
         uses: actions/upload-artifact@v4.4.3
         with:
           name: 'pts_bomber_windows'
@@ -69,8 +69,8 @@ jobs:
             ${{ github.workspace }}\target\release\bundle\nsis\pts_bomber_*_x64-setup.exe
           compression-level: 9
           if-no-files-found: error
-      - name: Upload (macOS ARM)
-        if: matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-latest'
+        name: Upload (macOS ARM)
         uses: actions/upload-artifact@v4.4.3
         with:
           name: 'pts_bomber_macos_arm'
