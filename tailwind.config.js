@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      'roboto': ['Roboto', 'sans-serif'],
+      'mono': ['JetBrains Mono'],
     }
   },
   plugins: [],

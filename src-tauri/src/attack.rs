@@ -1,5 +1,5 @@
 use crate::services::{
-    construct_call_services_list, construct_services_list, BodyType, Service, ServiceType, Victim,
+    construct_call_services_list, construct_services_list, BodyType, Service, Victim,
 };
 use reqwest::{Client, Method};
 use std::time::Duration;
@@ -21,13 +21,7 @@ pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
     let services = construct_call_services_list(victim);
     let t = tokio::spawn(async move {
         for service in services {
-            for i in 0..CALL_DELAY {
-                println!("Waiting {} seconds before calling", CALL_DELAY - i);
-
-                tokio::time::sleep(Duration::from_secs(1)).await;
-            }
-            println!();
-
+            tokio::time::sleep(Duration::from_secs(CALL_DELAY as u64)).await;
             send_single(service.clone()).await.expect("");
         }
     });
@@ -48,12 +42,6 @@ async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>>
         .build()
         .expect("");
 
-    match service.service_type {
-        ServiceType::Sms => println!("Sending SMS {}", service.name),
-        ServiceType::Call => println!("Calling {}", service.name),
-        ServiceType::ServiceMessage => println!("Sending service SMS {}", service.name),
-    }
-
     let mut res;
     match service.method {
         Method::GET => res = client.get(service.url),
@@ -66,8 +54,7 @@ async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>>
     }
 
     let res = res.send().await?;
-    println!("{}: {}", res.status(), res.text().await?);
-    println!("{} sent\n", service.name);
+    println!("{} {}\n{}\n", service.name, res.status(), res.text().await?);
 
     Ok(())
 }

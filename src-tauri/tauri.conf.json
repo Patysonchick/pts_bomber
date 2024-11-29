@@ -16,8 +16,10 @@
         "label": "main",
         "title": "pts_bomber",
         "decorations": false,
-        "resizable": true,
-        "width": 450,
+        "transparent": true,
+        "center": true,
+        "resizable": false,
+        "width": 475,
         "height": 225
       }
     ],
