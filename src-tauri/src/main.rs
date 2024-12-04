@@ -16,7 +16,7 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             format_phone_ru,
-            show_formatter_error,
+            show_dialog_error,
             attack,
             show_about_window
         ])
@@ -42,19 +42,32 @@ fn format_phone_ru(numbers: &str) -> String {
 }
 
 #[tauri::command]
-async fn show_formatter_error(app: tauri::AppHandle, e: String) {
+async fn show_dialog_error(app: tauri::AppHandle, e: String) {
     let message = match e.as_str() {
         "0" => app.dialog().message("Неправильная длина номера"),
         "1" => app
             .dialog()
             .message("Неправильный шаблон номера\nОн должен быть похожим на 7 (9xx) xxx-xx-xx"),
-        _ => app.dialog().message("Неизвестная ошибка"),
+        "2" => app.dialog().message("Подождите..."),
+        _ => app.dialog().message(""),
     };
 
-    message
-        .kind(MessageDialogKind::Error)
-        .title("Неправильно набран номер")
-        .blocking_show();
+    if e == "0" || e == "1" {
+        message
+            .kind(MessageDialogKind::Error)
+            .title("Неправильно набран номер")
+            .blocking_show();
+    } else if e == "2" {
+        message
+            .kind(MessageDialogKind::Warning)
+            .title("Уже атакует")
+            .blocking_show();
+    } else {
+        message
+            .kind(MessageDialogKind::Error)
+            .title("Неизвестная ошибка")
+            .blocking_show();
+    }
 }
 
 #[tauri::command]

@@ -38,7 +38,7 @@ struct AttackArgs<'a> {
 }
 
 #[derive(Serialize, Deserialize)]
-struct ShowFormatterErrorArgs<'a> {
+struct ShowDialogErrorArgs<'a> {
     e: &'a str,
 }
 
@@ -79,14 +79,15 @@ pub fn App() -> impl IntoView {
                     set_title.set(Status::IsIdling);
                     log("Ended");
                 } else {
-                    let args = serde_wasm_bindgen::to_value(&ShowFormatterErrorArgs {
-                        e: &formated_phone,
-                    })
-                    .unwrap();
-                    invoke("show_formatter_error", args).await;
+                    let args =
+                        serde_wasm_bindgen::to_value(&ShowDialogErrorArgs { e: &formated_phone })
+                            .unwrap();
+                    invoke("show_dialog_error", args).await;
                 }
             } else {
                 log("Tried attack while attacking");
+                let args = serde_wasm_bindgen::to_value(&ShowDialogErrorArgs { e: "2" }).unwrap();
+                invoke("show_dialog_error", args).await;
             }
         });
     };
@@ -105,10 +106,6 @@ pub fn App() -> impl IntoView {
                                 <button type="submit" class="button material-symbols-rounded">"send"</button>
                             </form>
                         </div>
-                        // <div class="h-full w-full flex-element center-elements">
-                        //     <div class="bg-black font-bold p-2 m-1 rounded-2xl">"Логи"</div>
-                        //     <textarea readonly class="panel bg-black h-full w-full">{ logs }</textarea>
-                        // </div>
                     </div>
                     <Footer/>
                 }/>
