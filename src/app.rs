@@ -1,9 +1,11 @@
 use crate::about::About;
 use crate::footer::Footer;
 use crate::titlebar::{Status, Titlebar};
-use leptos::leptos_dom::ev::SubmitEvent;
-use leptos::*;
-use leptos_router::*;
+use leptos::ev::SubmitEvent;
+use leptos::prelude::*;
+use leptos::task::spawn_local;
+use leptos_router::components::{Route, Router, Routes};
+use leptos_router::path;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
@@ -44,9 +46,8 @@ struct ShowDialogErrorArgs<'a> {
 
 #[component]
 pub fn App() -> impl IntoView {
-    let (input_field, set_input_field) = create_signal(String::new());
-    let (title, set_title) = create_signal(Status::IsIdling);
-    // let (logs, set_logs) = create_signal(String::from("Логи будут здесь..."));
+    let (input_field, set_input_field) = signal(String::new());
+    let (title, set_title) = signal(Status::IsIdling);
 
     let update_input = move |ev| {
         let v = event_target_value(&ev);
@@ -94,8 +95,8 @@ pub fn App() -> impl IntoView {
 
     view! {
         <Router>
-            <Routes>
-                <Route path="/" view=move || view! {
+            <Routes fallback=|| "Not found.">
+                <Route path=path!("/") view=move || view! {
                     <Titlebar title=title/>
                     <div class="panel flex-element flex-auto w-full center-elements justify-around">
                         <div class="w-full flex-element center-elements">
@@ -109,7 +110,7 @@ pub fn App() -> impl IntoView {
                     </div>
                     <Footer/>
                 }/>
-                <Route path="/about" view=About/>
+                <Route path=path!("/about") view=About/>
             </Routes>
         </Router>
     }

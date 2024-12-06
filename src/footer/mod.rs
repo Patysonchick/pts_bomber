@@ -1,4 +1,5 @@
-use leptos::*;
+use leptos::prelude::*;
+use leptos::task::spawn_local;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsValue;
 
