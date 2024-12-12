@@ -9,8 +9,9 @@ use crate::phone::{Country, FormatterErrors, Phone};
 use crate::services::Victim;
 use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
 
+#[tokio::main]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-fn main() {
+async fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())

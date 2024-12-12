@@ -63,7 +63,7 @@ pub struct Victim {
 ///
 ///     services.push(service);
 /// }
-pub fn construct_services_list(victim: Victim) -> Vec<Service> {
+pub async fn construct_services_list(victim: Victim) -> Vec<Service> {
     let mut services = Vec::new();
 
     match victim.phone.country {
@@ -276,7 +276,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
 }
 
 /// List of call services
-pub fn construct_call_services_list(victim: Victim) -> Vec<Service> {
+pub async fn construct_call_services_list(victim: Victim) -> Vec<Service> {
     let mut services = Vec::new();
 
     match victim.phone.country {
