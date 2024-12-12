@@ -72,7 +72,7 @@ async fn show_dialog_error(app: tauri::AppHandle, e: String) {
 }
 
 #[tauri::command]
-async fn attack(phone: String) {
+async fn attack(phone: String, cycles: u64) {
     let phone = Phone {
         phone,
         country: Country::Ru,
@@ -86,7 +86,7 @@ async fn attack(phone: String) {
     };
 
     println!();
-    let _ = send(victim).await;
+    let _ = send(victim, cycles).await;
 }
 
 #[tauri::command]

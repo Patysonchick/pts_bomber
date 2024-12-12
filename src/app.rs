@@ -37,6 +37,7 @@ struct FormatPhoneRuArgs<'a> {
 #[derive(Serialize, Deserialize)]
 struct AttackArgs<'a> {
     phone: &'a str,
+    cycles: u64,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -47,12 +48,8 @@ struct ShowDialogErrorArgs<'a> {
 #[component]
 pub fn App() -> impl IntoView {
     let (input_field, set_input_field) = signal(String::new());
+    let (cycles, set_cycles) = signal(1u64);
     let (title, set_title) = signal(Status::IsIdling);
-
-    let update_input = move |ev| {
-        let v = event_target_value(&ev);
-        set_input_field.set(v);
-    };
 
     let attack = move |ev: SubmitEvent| {
         ev.prevent_default();
@@ -73,6 +70,7 @@ pub fn App() -> impl IntoView {
 
                     let args = serde_wasm_bindgen::to_value(&AttackArgs {
                         phone: &formated_phone,
+                        cycles: cycles.get_untracked(),
                     })
                     .unwrap();
                     invoke("attack", args).await;
@@ -103,8 +101,14 @@ pub fn App() -> impl IntoView {
                             <div class="bg-black p-2 m-1 rounded-2xl">"Введите номер"</div>
                             <form class="flex-element flex-row center-elements" on:submit=attack>
                                 <span class="panel bg-black">"🇷🇺"</span>
-                                <input type="tel" placeholder="+7 (9xx) xxx xx-xx" class="w-full button p-1 border-2 border-green-600 rounded-xl" on:input=update_input />
-                                <input type="number" value="1" min="1" step="1" class="button w-14" />
+                                <input type="tel" placeholder="+7 (9xx) xxx xx-xx" class="w-full button p-1 border-2 border-green-600 rounded-xl" on:input=move |ev| {
+                                    let v = event_target_value(&ev);
+                                    set_input_field.set(v);
+                                } />
+                                <input type="number" value="1" min="1" step="1" class="button w-14" on:input=move |ev| {
+                                    let v = event_target_value(&ev);
+                                    set_cycles.set(v.parse().unwrap());
+                                } />
                                 <button type="submit" class="button material-symbols-rounded">"send"</button>
                             </form>
                         </div>
