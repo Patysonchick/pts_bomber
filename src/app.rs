@@ -94,27 +94,54 @@ pub fn App() -> impl IntoView {
     view! {
         <Router>
             <Routes fallback=|| "Not found.">
-                <Route path=path!("/") view=move || view! {
-                    <Titlebar title=title />
-                    <div class="panel flex-element w-full h-full center-elements">
-                        <div class="flex-element w-full center-elements">
-                            <div class="bg-black p-2 m-1 rounded-2xl">"Введите номер"</div>
-                            <form class="flex-element flex-row center-elements" on:submit=attack>
-                                <span class="panel bg-black">"🇷🇺"</span>
-                                <input type="tel" placeholder="+7 (9xx) xxx xx-xx" class="w-full button p-1 border-2 border-green-600 rounded-xl" on:input=move |ev| {
-                                    let v = event_target_value(&ev);
-                                    set_input_field.set(v);
-                                } />
-                                <input type="number" value="1" min="1" step="1" class="button w-14" on:input=move |ev| {
-                                    let v = event_target_value(&ev);
-                                    set_cycles.set(v.parse().unwrap());
-                                } />
-                                <button type="submit" class="button material-symbols-rounded">"send"</button>
-                            </form>
-                        </div>
-                    </div>
-                    <Footer />
-                } />
+                <Route
+                    path=path!("/")
+                    view=move || {
+                        view! {
+                            <Titlebar title=title />
+                            <div class="panel flex-element w-full h-full center-elements">
+                                <div class="flex-element w-full center-elements">
+                                    <div class="bg-black p-2 m-1 rounded-2xl">
+                                        "Введите номер"
+                                    </div>
+                                    <form
+                                        class="flex-element flex-row center-elements"
+                                        on:submit=attack
+                                    >
+                                        <span class="panel bg-black">"🇷🇺"</span>
+                                        <input
+                                            type="tel"
+                                            placeholder="+7 (9xx) xxx xx-xx"
+                                            class="w-full button p-1 border-2 border-green-600 rounded-xl"
+                                            on:input=move |ev| {
+                                                let v = event_target_value(&ev);
+                                                set_input_field.set(v);
+                                            }
+                                        />
+                                        <input
+                                            type="number"
+                                            value="1"
+                                            min="1"
+                                            step="1"
+                                            class="button w-14"
+                                            on:input=move |ev| {
+                                                let v = event_target_value(&ev);
+                                                set_cycles.set(v.parse().unwrap());
+                                            }
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="button material-symbols-rounded"
+                                        >
+                                            "send"
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <Footer />
+                        }
+                    }
+                />
                 <Route path=path!("/about") view=About />
             </Routes>
         </Router>
