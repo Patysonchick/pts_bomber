@@ -7,3 +7,4 @@ ignore = ["./src-tauri"]
 [serve]
 port = 3229
 open = false
+ws_protocol = "ws"

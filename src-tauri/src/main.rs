@@ -7,20 +7,22 @@ mod services;
 use crate::attack::send;
 use crate::phone::{Country, FormatterErrors, Phone};
 use crate::services::Victim;
+use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
 
+#[tokio::main]
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-fn main() {
+async fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![echo, format_phone_ru, attack])
+        .invoke_handler(tauri::generate_handler![
+            format_phone_ru,
+            show_dialog_error,
+            attack,
+            show_about_window
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-}
-
-#[tauri::command]
-fn echo(msg: &str) {
-    println!("Echo {}", msg);
 }
 
 #[tauri::command]
@@ -41,7 +43,36 @@ fn format_phone_ru(numbers: &str) -> String {
 }
 
 #[tauri::command]
-async fn attack(phone: String) {
+async fn show_dialog_error(app: tauri::AppHandle, e: String) {
+    let message = match e.as_str() {
+        "0" => app.dialog().message("Неправильная длина номера"),
+        "1" => app
+            .dialog()
+            .message("Неправильный шаблон номера\nОн должен быть похожим на 7 (9xx) xxx-xx-xx"),
+        "2" => app.dialog().message("Подождите..."),
+        _ => app.dialog().message(""),
+    };
+
+    if e == "0" || e == "1" {
+        message
+            .kind(MessageDialogKind::Error)
+            .title("Неправильно набран номер")
+            .blocking_show();
+    } else if e == "2" {
+        message
+            .kind(MessageDialogKind::Warning)
+            .title("Уже атакует")
+            .blocking_show();
+    } else {
+        message
+            .kind(MessageDialogKind::Error)
+            .title("Неизвестная ошибка")
+            .blocking_show();
+    }
+}
+
+#[tauri::command]
+async fn attack(phone: String, cycles: u64) {
     let phone = Phone {
         phone,
         country: Country::Ru,
@@ -55,5 +86,15 @@ async fn attack(phone: String) {
     };
 
     println!();
-    let _ = send(victim).await;
+    let _ = send(victim, cycles).await;
+}
+
+#[tauri::command]
+async fn show_about_window(app: tauri::AppHandle) {
+    tauri::WebviewWindowBuilder::new(&app, "about", tauri::WebviewUrl::App("/about".into()))
+        .title("О программе")
+        .inner_size(350.0, 600.0)
+        .resizable(false)
+        .build()
+        .unwrap();
 }

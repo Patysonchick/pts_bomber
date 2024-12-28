@@ -11,6 +11,7 @@
 ### SMS
 1. 4 лапы
 2. Mvideo
+3. Мегафон
 ### Сервисные SMS
 1. Telegram
 ### Звонки
@@ -24,6 +25,7 @@
 * Git
 * GitHub
 * GitHub Actions
+* [![Rust](https://github.com/Patysonchick/pts_bomber/actions/workflows/rust.yml/badge.svg?branch=staging)](https://github.com/Patysonchick/pts_bomber/actions/workflows/rust.yml)
 * Arch Linux
 
 ## Импользуемое оборудование
