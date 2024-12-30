@@ -13,6 +13,7 @@
 3. Yota
 ### Сервисные SMS
 1. Telegram
+2. spot.uz
 ### Звонки
 1. DNS
 2. Sunlight
