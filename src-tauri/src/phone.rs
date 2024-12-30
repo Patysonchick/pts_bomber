@@ -15,8 +15,9 @@ pub enum Country {
 pub enum FormatterTypes {
     Without7,
     WithPlus,
-    WithPlusHyphen,         // +7 *** ***-**-**
-    WithPlusBracketsHyphen, // +7 (***) ***-**-**
+    WithPlusHyphen,          // +7 *** ***-**-**
+    WithPlusBracketsHyphen,  // +7 (***) ***-**-**
+    WithPlusBracketsHyphen2, // +7 (***) ***-****
 }
 
 #[derive(Debug)]
@@ -104,6 +105,22 @@ impl Phone {
                     formatted.push_str(&self.phone[7..9]);
                     formatted.push('-');
                     formatted.push_str(&self.phone[9..11]);
+
+                    self.phone = formatted;
+                }
+                FormatterTypes::WithPlusBracketsHyphen2 => {
+                    let mut formatted = String::new();
+
+                    formatted.push('+');
+                    formatted.push(self.phone.chars().nth(0).unwrap());
+                    formatted.push(' ');
+                    formatted.push('(');
+                    formatted.push_str(&self.phone[1..4]);
+                    formatted.push(')');
+                    formatted.push(' ');
+                    formatted.push_str(&self.phone[4..7]);
+                    formatted.push('-');
+                    formatted.push_str(&self.phone[7..11]);
 
                     self.phone = formatted;
                 }
