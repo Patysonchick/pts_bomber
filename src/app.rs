@@ -132,8 +132,13 @@ pub fn App() -> impl IntoView {
                                         <button
                                             type="submit"
                                             class="button material-symbols-rounded"
+                                            class:bg-neutral-800=move || title.get() == Status::IsIdling
+                                            class:bg-red-700=move || title.get() == Status::Attacking
                                         >
-                                            "send"
+                                            {move || match title.get() {
+                                                Status::IsIdling => "send",
+                                                Status::Attacking => "block",
+                                            }}
                                         </button>
                                     </form>
                                 </div>
