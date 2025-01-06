@@ -7,22 +7,43 @@ mod services;
 use crate::attack::send;
 use crate::phone::{Country, FormatterErrors, Phone};
 use crate::services::Victim;
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc,
+};
+use tauri::{Manager, State};
 use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
 
-#[tokio::main]
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
-async fn main() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![
-            format_phone_ru,
-            show_dialog_error,
-            attack,
-            show_about_window
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+#[derive(Default)]
+struct StopFlag {
+    stop_flag: Arc<AtomicBool>,
+}
+
+#[tauri::command]
+async fn attack(phone: String, cycles: u64, state: State<'_, StopFlag>) -> Result<(), ()> {
+    println!("Start attack");
+    let phone = Phone {
+        phone,
+        country: Country::Ru,
+    };
+
+    let victim = Victim {
+        phone,
+        email: "".to_string(),
+        name: "".to_string(),
+        surname: "".to_string(),
+    };
+
+    let stop_flag = state.stop_flag.clone();
+    let _ = send(victim, cycles, stop_flag).await;
+
+    Ok(())
+}
+
+#[tauri::command]
+fn stop_attack(state: State<StopFlag>) {
+    state.stop_flag.store(true, Ordering::Relaxed); // Устанавливаем флаг остановки
+    println!("Stopping attack");
 }
 
 #[tauri::command]
@@ -72,24 +93,6 @@ async fn show_dialog_error(app: tauri::AppHandle, e: String) {
 }
 
 #[tauri::command]
-async fn attack(phone: String, cycles: u64) {
-    let phone = Phone {
-        phone,
-        country: Country::Ru,
-    };
-
-    let victim = Victim {
-        phone,
-        email: "".to_string(),
-        name: "".to_string(),
-        surname: "".to_string(),
-    };
-
-    println!();
-    let _ = send(victim, cycles).await;
-}
-
-#[tauri::command]
 async fn show_about_window(app: tauri::AppHandle) {
     tauri::WebviewWindowBuilder::new(&app, "about", tauri::WebviewUrl::App("/about".into()))
         .title("О программе")
@@ -97,4 +100,24 @@ async fn show_about_window(app: tauri::AppHandle) {
         .resizable(false)
         .build()
         .unwrap();
+}
+
+#[tokio::main]
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+async fn main() {
+    tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
+        .manage(StopFlag {
+            stop_flag: Arc::new(AtomicBool::new(false)),
+        })
+        .invoke_handler(tauri::generate_handler![
+            attack,
+            stop_attack,
+            format_phone_ru,
+            show_dialog_error,
+            show_about_window
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }
