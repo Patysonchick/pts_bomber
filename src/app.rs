@@ -84,17 +84,12 @@ pub fn App() -> impl IntoView {
                     invoke("show_dialog_error", args).await;
                 }
             } else {
-                log("Tried attack while attacking");
-                let args = serde_wasm_bindgen::to_value(&ShowDialogErrorArgs { e: "2" }).unwrap();
-                invoke("show_dialog_error", args).await;
-            }
-        });
-    };
+                // log("Tried attack while attacking");
+                // let args = serde_wasm_bindgen::to_value(&ShowDialogErrorArgs { e: "2" }).unwrap();
+                // invoke("show_dialog_error", args).await;
 
-    let stop_attack = move |ev: SubmitEvent| {
-        ev.prevent_default();
-        spawn_local(async move {
-            invoke_without_args("stop_attack").await;
+                invoke_without_args("stop_attack").await;
+            }
         });
     };
 
@@ -141,11 +136,10 @@ pub fn App() -> impl IntoView {
                                             class="button material-symbols-rounded"
                                             class:bg-neutral-800=move || title.get() == Status::IsIdling
                                             class:bg-red-700=move || title.get() == Status::Attacking
-                                            // on:click=move |_| if title.get() == Status::Attacking { stop_attack; }
                                         >
                                             {move || match title.get() {
                                                 Status::IsIdling => "send",
-                                                Status::Attacking => "block",
+                                                Status::Attacking => "cancel",
                                             }}
                                         </button>
                                     </form>

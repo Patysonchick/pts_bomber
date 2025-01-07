@@ -11,7 +11,7 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,
 };
-use tauri::{Manager, State};
+use tauri::State;
 use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
 
 #[derive(Default)]
@@ -21,7 +21,6 @@ struct StopFlag {
 
 #[tauri::command]
 async fn attack(phone: String, cycles: u64, state: State<'_, StopFlag>) -> Result<(), ()> {
-    println!("Start attack");
     let phone = Phone {
         phone,
         country: Country::Ru,
@@ -34,8 +33,8 @@ async fn attack(phone: String, cycles: u64, state: State<'_, StopFlag>) -> Resul
         surname: "".to_string(),
     };
 
-    let stop_flag = state.stop_flag.clone();
-    let _ = send(victim, cycles, stop_flag).await;
+    println!("Starting attack");
+    let _ = send(victim, cycles, Arc::clone(&state.stop_flag)).await;
 
     Ok(())
 }
