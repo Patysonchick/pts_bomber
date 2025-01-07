@@ -49,12 +49,12 @@ struct ShowDialogErrorArgs<'a> {
 pub fn App() -> impl IntoView {
     let (input_field, set_input_field) = signal(String::new());
     let (cycles, set_cycles) = signal(1u64);
-    let (title, set_title) = signal(Status::IsIdling);
+    let (title, set_title) = signal(Status::Idling);
 
     let attack = move |ev: SubmitEvent| {
         ev.prevent_default();
         spawn_local(async move {
-            if title.get_untracked() != Status::Attacking {
+            if title.get_untracked() == Status::Idling {
                 let input_field = input_field.get_untracked();
 
                 let args = serde_wasm_bindgen::to_value(&FormatPhoneRuArgs {
@@ -75,7 +75,7 @@ pub fn App() -> impl IntoView {
                     .unwrap();
                     invoke("attack", args).await;
 
-                    set_title.set(Status::IsIdling);
+                    set_title.set(Status::Idling);
                     log("Ended");
                 } else {
                     let args =
@@ -83,12 +83,13 @@ pub fn App() -> impl IntoView {
                             .unwrap();
                     invoke("show_dialog_error", args).await;
                 }
-            } else {
-                // log("Tried attack while attacking");
-                // let args = serde_wasm_bindgen::to_value(&ShowDialogErrorArgs { e: "2" }).unwrap();
-                // invoke("show_dialog_error", args).await;
-
+            } else if title.get_untracked() == Status::Attacking {
+                set_title.set(Status::Stopping);
                 invoke_without_args("stop_attack").await;
+            } else {
+                log("Tried stop while stopping");
+                let args = serde_wasm_bindgen::to_value(&ShowDialogErrorArgs { e: "2" }).unwrap();
+                invoke("show_dialog_error", args).await;
             }
         });
     };
@@ -134,12 +135,14 @@ pub fn App() -> impl IntoView {
                                         <button
                                             type="submit"
                                             class="button material-symbols-rounded"
-                                            class:bg-neutral-800=move || title.get() == Status::IsIdling
+                                            class:bg-neutral-800=move || title.get() == Status::Idling
                                             class:bg-red-700=move || title.get() == Status::Attacking
+                                            class:bg-yellow-400=move || title.get() == Status::Stopping
                                         >
                                             {move || match title.get() {
-                                                Status::IsIdling => "send",
+                                                Status::Idling => "send",
                                                 Status::Attacking => "cancel",
+                                                Status::Stopping => "pending",
                                             }}
                                         </button>
                                     </form>

@@ -81,7 +81,7 @@ async fn show_dialog_error(app: tauri::AppHandle, e: String) {
     } else if e == "2" {
         message
             .kind(MessageDialogKind::Warning)
-            .title("Уже атакует")
+            .title("Остановка атаки")
             .blocking_show();
     } else {
         message

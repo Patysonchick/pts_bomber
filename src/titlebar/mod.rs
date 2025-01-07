@@ -3,8 +3,9 @@ use wasm_bindgen::prelude::*;
 
 #[derive(Clone, PartialEq)]
 pub enum Status {
-    IsIdling,
+    Idling,
     Attacking,
+    Stopping,
 }
 
 #[wasm_bindgen(module = "/src/titlebar/titlebar.js")]
@@ -32,12 +33,14 @@ pub fn Titlebar(title: ReadSignal<Status>) -> impl IntoView {
             <span
                 data-tauri-drag-region
                 class="panel w-full font-bold"
-                class:bg-neutral-800=move || title.get() == Status::IsIdling
+                class:bg-neutral-800=move || title.get() == Status::Idling
                 class:bg-red-700=move || title.get() == Status::Attacking
+                class:bg-yellow-400=move || title.get() == Status::Stopping
             >
                 {move || match title.get() {
-                    Status::IsIdling => "Простаивает",
+                    Status::Idling => "Простаивает",
                     Status::Attacking => "Атака",
+                    Status::Stopping => "Остановка",
                 }}
             </span>
             <div class="panel material-symbols-rounded">
