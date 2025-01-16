@@ -5,7 +5,7 @@
 
 ### **Первый** SMS/звонки бомбер написанный на `Rust`.
 
-Новости и успехи разработки в Telegram канале - [pts_bomber](https://t.me/pts_bomber)
+Новости и успехи разработки в Telegram канале - [pts_bomber](https://t.me/+Z-RHprgUv_NhNTFi)
 
 ## Рабочие российские сервисы
 ### SMS
